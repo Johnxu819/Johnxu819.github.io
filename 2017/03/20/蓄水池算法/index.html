@@ -186,7 +186,28 @@ if( M &lt; k)
 </code></pre><p>   end for<br>证明每个数被取到的概率为k/n:</p>
 <p>对于第i个数这里写图片描述，在前k步被选中的概率是1， 从第k+1步开始，i不被选中的概率为k/k+1,那么读到第n个数时， 第i个数这里写图片描述被选中的概率 = 被选中的概率 <em> 以后每一步都不被换走的概率,即<br>1 </em> k/k+1 * k+1/k+2 …n-1/n = k/n</p>
 <p>对于第j个数(j&gt;=k)被选中的概率为： 在他出现时被选中的概率 <em> 在他出现以后不被换走的概率,即:<br>k/j </em> j /j+1 。。。n-1/n = k/n</p>
+<h2 id="完整实现代码"><a href="#完整实现代码" class="headerlink" title="完整实现代码"></a>完整实现代码</h2><pre><code>public int rand(int max){
+  return (int) (Math.random()*max)+1;
+}
 
+public int[] getKNumsRand(int k,int max){
+   if(max&lt;1||k&lt;1){
+     return null;
+   }
+
+   int[] res=new int[Math.min(k,max)];
+   for(int i=0;i!=res.length;i++){
+     res[i]=i+1;
+   }
+
+       for(int i=k+1;i&lt;max+1;i++){
+       if(rand(i)&lt;=k){
+         res[rand(k)-1]=i;
+       }
+   }
+   return res;
+}
+</code></pre>
 
                 
             </div>
