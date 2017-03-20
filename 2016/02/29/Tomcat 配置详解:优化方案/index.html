@@ -10,13 +10,12 @@
 
     <!--Description-->
     
-        <meta name="description" content="###1、Tomcat的目录层次结构
-bin:   存放启动和关闭Tomcat的脚本文件
+        <meta name="description" content="1、Tomcat的目录层次结构bin:   存放启动和关闭Tomcat的脚本文件
 conf： 存放Tomcat服务器的各种配置文件
 lib:   存放tomcat服务器支撑的jar包
 logs:  存放Tomcat的日志文件
 temp:  存放Tomcat运行时产生的临时文件
-webapps">
+webapps:web">
     
 
     <!--Author-->
@@ -182,26 +181,22 @@ webapps">
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <p>###1、Tomcat的目录层次结构</p>
-<p>bin:   存放启动和关闭Tomcat的脚本文件</p>
+                <h2 id="1、Tomcat的目录层次结构"><a href="#1、Tomcat的目录层次结构" class="headerlink" title="1、Tomcat的目录层次结构"></a>1、Tomcat的目录层次结构</h2><p>bin:   存放启动和关闭Tomcat的脚本文件</p>
 <p>conf： 存放Tomcat服务器的各种配置文件</p>
 <p>lib:   存放tomcat服务器支撑的jar包</p>
 <p>logs:  存放Tomcat的日志文件</p>
 <p>temp:  存放Tomcat运行时产生的临时文件</p>
 <p>webapps:web应用虽在目录，即供外界访问的web资源的存放目录</p>
 <p>work:  Tomcat的工作目录</p>
-<p>###2、JavaWeb应用的组成结构</p>
-<p>|—-html、jsp、css、js等文件，根目录下的文件外界可以直接访问</p>
+<h2 id="2、JavaWeb应用的组成结构"><a href="#2、JavaWeb应用的组成结构" class="headerlink" title="2、JavaWeb应用的组成结构"></a>2、JavaWeb应用的组成结构</h2><p>|—-html、jsp、css、js等文件，根目录下的文件外界可以直接访问</p>
 <p>|—-WEB-INF目录</p>
 <p>|———classes目录(java类)</p>
 <p>|———lib目录(java类运行所需的jar包)</p>
 <p>|———web.xml(web应用的配置文件)</p>
 <p>WEB-INF 这个目录下的文件外界无法直接访问，由web服务器负责调用</p>
-<p>###3、JavaWeb应用的发布</p>
-<p>开放式目录方式：</p>
+<h2 id="3、JavaWeb应用的发布"><a href="#3、JavaWeb应用的发布" class="headerlink" title="3、JavaWeb应用的发布"></a>3、JavaWeb应用的发布</h2><p>开放式目录方式：</p>
 <p>打包war方式:   使用   Jar -cvf *.war .</p>
-<p>###4、Tomcat的Server.xml文件</p>
-<p>Tomcat本身由一系列可配置的组件构成，其中核心组件是Servlet容器组件，它是所有其他Tomcat组件的顶层容器。每个组件都可以在Tomcat安装目录/conf/server.xml文件中进行配置，每个Tomcat组件在server.xml文件中对应一种配置元素。</p>
+<h2 id="4、Tomcat的Server-xml文件"><a href="#4、Tomcat的Server-xml文件" class="headerlink" title="4、Tomcat的Server.xml文件"></a>4、Tomcat的Server.xml文件</h2><p>Tomcat本身由一系列可配置的组件构成，其中核心组件是Servlet容器组件，它是所有其他Tomcat组件的顶层容器。每个组件都可以在Tomcat安装目录/conf/server.xml文件中进行配置，每个Tomcat组件在server.xml文件中对应一种配置元素。</p>
 <p>server.xml被称为Tomcat的主配置文件或全局配置文件，它完成两个任务：</p>
 <p>（1）提供Tomcat组件的初始配置</p>
 <p>（2）说明Tomcat的结构，含义，使Tomcat通过实例化组件完成启动及构建自身。</p>
@@ -256,8 +251,7 @@ webapps">
 <p>将这个请求匹配到某个去处理，因为这里默认处理的是localhost，所以请求传递到name属性是localhost的。</p>
 <p>根据地址串中的子目录为”test”,获知能够处理该请求的Servlet存放在虚拟目录为”test”的Web应用中，于是通过查找元素，找到path=”test” 的,然后根据中的物理路径”docBase”的属性值查找Web应用的物理地址；</p>
 <p>服务器根据对应的Web应用的“WEB_INF/web.xml”配置文件，查找能够处理index.jsp的servlet;</p>
-<p>###5、Tomcat配置优化</p>
-<p>1 ,增加JVM堆内存大小</p>
+<h2 id="5、Tomcat配置优化"><a href="#5、Tomcat配置优化" class="headerlink" title="5、Tomcat配置优化"></a>5、Tomcat配置优化</h2><p>1 ,增加JVM堆内存大小</p>
 <p>通过修改conf 目录下的 catalina.sh文件</p>
 <pre><code>JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8
 -server -Xms1024m -Xmx1024m
@@ -293,12 +287,51 @@ webapps">
 <p>3， 应用程序安全</p>
 <p>关闭war自动部署 unpackWARs=”false” autoDeploy=”false”。防止被植入木马等恶意程序</p>
 <p>关闭 reloadable=”false” 也用于防止被植入木马</p>
-<p>###Tomcat配置优化后实例</p>
-<p><pre><code>type=”org.apache.catalina.UserDatabase”<br>description=”User database that can be updated and saved”<br>factory=”org.apache.catalina.users.MemoryUserDatabaseFactory”<br>pathname=”conf/tomcat-users.xml”/&gt;</code></pre></p>
-<p>一组Connector和一个Engine的集合，这组Connector共用一个Engine来处理所有Connector收到的请求，</p>
-<p>负责处理所获得到的请求</p>
-<p><pre><code>protocol=”HTTP/1.1”<br>URIEncoding=”UTF-8”<br>minSpareThreads=”25”<br>maxSpareThreads=”75”<br>enableLookups=”false”<br>disableUploadTimeout=”true”<br>connectionTimeout=”20000”<br>acceptCount=”300”<br>maxThreads=”300”<br>maxProcessors=”1000”<br>minProcessors=”5”<br>useURIValidationHack=”false”<br>redirectPort=”8443”<br>server=”Homeat App Srv 1.0”/&gt;</code></pre></p>
+<h2 id="6-Tomcat配置优化后实例"><a href="#6-Tomcat配置优化后实例" class="headerlink" title="6.Tomcat配置优化后实例"></a>6.Tomcat配置优化后实例</h2><pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;&gt;
+ &lt;Listener className=&quot;org.apache.catalina.core.AprLifecycleListener&quot;     
+ SSLEngine=&quot;on&quot; /&gt;
+ &lt;Listener className=&quot;org.apache.catalina.core.JasperListener&quot; /&gt;
+&lt;Listener className=&quot;org.apache.catalina.core.JreMemoryLeakPreventionListener&quot; /&gt;
+ &lt;Listener     className=&quot;org.apache.catalina.mbeans.GlobalResourcesLifecycleListener&quot; /&gt;
+  &lt;Listener     className=&quot;org.apache.catalina.core.ThreadLocalLeakPreventionListener&quot; /&gt;
+   &lt;GlobalNamingResources&gt;
+     &lt;Resource name=&quot;UserDatabase&quot; auth=&quot;Container&quot;
+           type=&quot;org.apache.catalina.UserDatabase&quot;
+          description=&quot;User database that can be updated and saved&quot;
+          factory=&quot;org.apache.catalina.users.MemoryUserDatabaseFactory&quot;
+        pathname=&quot;conf/tomcat-users.xml&quot; /&gt;
+  &lt;/GlobalNamingResources&gt;
 
+  &lt;Service name=&quot;Catalina&quot;&gt;
+    &lt;Connector port=&quot;8080&quot;
+                protocol=&quot;HTTP/1.1&quot;
+              URIEncoding=&quot;UTF-8&quot;
+                minSpareThreads=&quot;25&quot;
+               maxSpareThreads=&quot;75&quot;
+               enableLookups=&quot;false&quot;
+               disableUploadTimeout=&quot;true&quot;
+               connectionTimeout=&quot;20000&quot;
+               acceptCount=&quot;300&quot;
+               maxThreads=&quot;300&quot;
+               maxProcessors=&quot;1000&quot;
+               minProcessors=&quot;5&quot;
+               useURIValidationHack=&quot;false&quot;
+               redirectPort=&quot;8443&quot;
+               server=&quot;Homeat App Srv 1.0&quot;
+               /&gt;
+
+      &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;
+       &lt;Realm className=&quot;org.apache.catalina.realm.LockOutRealm&quot;&gt;
+            &lt;Realm className=&quot;org.apache.catalina.realm.UserDatabaseRealm&quot; resourceName=&quot;UserDatabase&quot;/&gt;
+       &lt;/Realm&gt;    
+       &lt;Host name=&quot;localhost&quot;  appBase=&quot;&quot; unpackWARs=&quot;false&quot; autoDeploy=&quot;false&quot;&gt;
+        &lt;Context path=&quot;&quot; docBase=&quot;/var/tomcat/tomcat-7/version/homeat.war&quot;     reloadable=&quot;false&quot;/&gt;
+       &lt;/Host&gt;
+      &lt;/Engine&gt;
+  &lt;/Service&gt; 
+&lt;/Server&gt;
+</code></pre>
 
                 
             </div>
