@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="##什么是Glide
+
+An image loading and caching library for Android focused on smooth scrolling一个使得Android图片列表滑动时更加流畅的图片加载和缓存库。
+
+##Glide 优点(1) Glide 不仅是支持图片缓">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Glide源码分析"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Glide源码分析 - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Glide源码分析</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-04-15
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>##什么是Glide</p>
+<blockquote>
+<p>An image loading and caching library for Android focused on smooth scrolling<br>一个使得Android图片列表滑动时更加流畅的图片加载和缓存库。</p>
+</blockquote>
+<p>##Glide 优点<br>(1) Glide 不仅是支持图片缓存和加载，它支持 Gif、WebP、缩略图、Video<br>(2) 支持优先级处理<br>(3) 与 Activity/Fragment 生命周期一致，支持 trimMemory<br>(4) 支持 okhttp、Volley<br>(5) 与其它图片加载框架相比内存优化更良好</p>
+<p>##如何使用<br>        Glide.with(this)<br>               .load(“<a href="http://t.cn/RJqUUdJ" target="_blank" rel="external">http://t.cn/RJqUUdJ</a>“)<br>               .placeholder( R.drawable.default )<br>               .error( R.drawable.error)<br>               .into(imageView);</p>
+<p>##Glide总体设计图</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1344138-e33fc58a09164d92.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>##基本概念<br>RequestManager：请求管理，每一个Activity都会创建一个RequestManager，根据对应Activity的生命周期管理该Activity上所以的图片请求。<br>Engine：加载图片的引擎，根据Request创建EngineJob和DecodeJob。<br>EngineJob：图片加载。<br>DecodeJob：图片处理。</p>
+<p>##Glide 流程图</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1344138-27068d0d9e47ec74.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>##Glide 源码解析加载流程</p>
+<p>#####1，Glide.with(初始化构建流程)</p>
+<p>######核心实现代码<br>    /**</p>
+<pre><code> * Begin a load with Glide that will tied to the give {@link android.support.v4.app.FragmentActivity}&apos;s lifecycle
+ * and that uses the given {@link android.support.v4.app.FragmentActivity}&apos;s default options.
+ *
+ * @param activity The activity to use.
+ * @return A RequestManager for the given FragmentActivity that can be used to start a load.
+ */
+public static RequestManager with(FragmentActivity activity) {
+    RequestManagerRetriever retriever = RequestManagerRetriever.get();
+    return retriever.get(activity);
+}
+</code></pre><hr>
+<pre><code>RequestManager supportFragmentGet(Context context, FragmentManager fm) {
+    SupportRequestManagerFragment current = getSupportRequestManagerFragment(fm);
+    RequestManager requestManager = current.getRequestManager();
+    if (requestManager == null) {
+        requestManager = new RequestManager(context, current.getLifecycle(), current.getRequestManagerTreeNode());
+        current.setRequestManager(requestManager);
+    }
+    return requestManager;
+}
+</code></pre><hr>
+<pre><code>RequestManager(Context context, final Lifecycle lifecycle, RequestManagerTreeNode treeNode,
+        RequestTracker requestTracker, ConnectivityMonitorFactory factory) {
+    this.context = context.getApplicationContext();
+    this.lifecycle = lifecycle;
+    this.treeNode = treeNode;
+    this.requestTracker = requestTracker;
+    this.glide = Glide.get(context);
+    this.optionsApplier = new OptionsApplier();
+
+    ConnectivityMonitor connectivityMonitor = factory.build(context,
+            new RequestManagerConnectivityListener(requestTracker));
+
+    // If we&apos;re the application level request manager, we may be created on a background thread. In that case we
+    // cannot risk synchronously pausing or resuming requests, so we hack around the issue by delaying adding
+    // ourselves as a lifecycle listener by posting to the main thread. This should be entirely safe.
+    if (Util.isOnBackgroundThread()) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                lifecycle.addListener(RequestManager.this);
+            }
+        });
+    } else {
+        lifecycle.addListener(this);
+    }
+    lifecycle.addListener(connectivityMonitor);
+}
+</code></pre><hr>
+<pre><code>/**
+ * Lifecycle callback that registers for connectivity events (if the android.permission.ACCESS_NETWORK_STATE
+ * permission is present) and restarts failed or paused requests.
+ */
+@Override
+public void onStart() {
+    // onStart might not be called because this object may be created after the fragment/activity&apos;s onStart method.
+    resumeRequests();
+}
+
+/**
+ * Lifecycle callback that unregisters for connectivity events (if the android.permission.ACCESS_NETWORK_STATE
+ * permission is present) and pauses in progress loads.
+ */
+@Override
+public void onStop() {
+    pauseRequests();
+}
+
+/**
+ * Lifecycle callback that cancels all in progress requests and clears and recycles resources for all completed
+ * requests.
+ */
+@Override
+public void onDestroy() {
+    requestTracker.clearRequests();
+}
+</code></pre><p>#####2，Glide.load（调用后builder就创建好了。之后就可以通过builder模式来配置参数了。）<br>1,创建DrawableTypeRequest并利用它的load方法设置相关参数</p>
+<pre><code>public DrawableTypeRequest&lt;String&gt; load(String string) {
+    return (DrawableTypeRequest&lt;String&gt;) fromString().load(string);
+}
+</code></pre><hr>
+<pre><code>public DrawableTypeRequest&lt;String&gt; fromString() {
+    return loadGeneric(String.class);
+}
+</code></pre><hr>
+<p>2，装载对象（包含请求的发起点）</p>
+<pre><code>private &lt;T&gt; DrawableTypeRequest&lt;T&gt; loadGeneric(Class&lt;T&gt; modelClass) {
+    ModelLoader&lt;T, InputStream&gt; streamModelLoader = Glide.buildStreamModelLoader(modelClass, context);
+    ModelLoader&lt;T, ParcelFileDescriptor&gt; fileDescriptorModelLoader =
+            Glide.buildFileDescriptorModelLoader(modelClass, context);
+    if (modelClass != null &amp;&amp; streamModelLoader == null &amp;&amp; fileDescriptorModelLoader == null) {
+        throw new IllegalArgumentException(&quot;Unknown type &quot; + modelClass + &quot;. You must provide a Model of a type for&quot;
+                + &quot; which there is a registered ModelLoader, if you are using a custom model, you must first call&quot;
+                + &quot; Glide#register with a ModelLoaderFactory for your custom model class&quot;);
+    }  //生成request
+    return optionsApplier.apply(
+            new DrawableTypeRequest&lt;T&gt;(modelClass, streamModelLoader, fileDescriptorModelLoader, context,
+                    glide, requestTracker, lifecycle, optionsApplier));
+}
+</code></pre><hr>
+<pre><code>public static &lt;T&gt; ModelLoader&lt;T, InputStream&gt; buildStreamModelLoader(Class&lt;T&gt; modelClass, Context context) {
+    return buildModelLoader(modelClass, InputStream.class, context);
+}
+</code></pre><hr>
+<pre><code>public static &lt;T, Y&gt; ModelLoader&lt;T, Y&gt; buildModelLoader(Class&lt;T&gt; modelClass, Class&lt;Y&gt; resourceClass,
+        Context context) {
+     if (modelClass == null) {
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, &quot;Unable to load null model, setting placeholder only&quot;);
+        }
+        return null;
+    }
+    return Glide.get(context).getLoaderFactory().buildModelLoader(modelClass, resourceClass);
+}
+</code></pre><hr>
+<pre><code>public synchronized &lt;T, Y&gt; ModelLoader&lt;T, Y&gt; buildModelLoader(Class&lt;T&gt; modelClass, Class&lt;Y&gt; resourceClass) {
+    ModelLoader&lt;T, Y&gt; result = getCachedLoader(modelClass, resourceClass);
+    if (result != null) {
+        // We&apos;ve already tried to create a model loader and can&apos;t with the currently registered set of factories,
+        // but we can&apos;t use null to demonstrate that failure because model loaders that haven&apos;t been requested
+        // yet will be null in the cache. To avoid this, we use a special signal model loader.
+        if (NULL_MODEL_LOADER.equals(result)) {
+            return null;
+        } else {
+            return result;
+        }
+    }
+
+    final ModelLoaderFactory&lt;T, Y&gt; factory = getFactory(modelClass, resourceClass);
+    if (factory != null) {
+        result = factory.build(context, this);
+        cacheModelLoader(modelClass, resourceClass, result);
+    } else {
+        // We can&apos;t generate a model loader for the given arguments with the currently registered set of factories.
+        cacheNullLoader(modelClass, resourceClass);
+    }
+    return result;
+}
+</code></pre><hr>
+<pre><code>private &lt;T, Y&gt; ModelLoader&lt;T, Y&gt; getCachedLoader(Class&lt;T&gt; modelClass, Class&lt;Y&gt; resourceClass) {
+    Map&lt;Class/*Y*/, ModelLoader/*T, Y*/&gt; resourceToLoaders = cachedModelLoaders.get(modelClass);
+    ModelLoader/*T, Y*/ result = null;
+    if (resourceToLoaders != null) {
+        result = resourceToLoaders.get(resourceClass);
+    }
+
+    return result;
+}
+</code></pre><hr>
+<pre><code>/**
+
+ */
+public GenericRequestBuilder&lt;ModelType, DataType, ResourceType, TranscodeType&gt; load(ModelType model) {
+    this.model = model;
+    isModelSet = true;
+    return this;
+}
+</code></pre><p>#####3，Glide.into（开始干活了，查找缓存，开始Job 加载图片，显示图片）<br>    public <y extends="" target<transcodetype="">&gt; Y into(Y target) {<br>        Util.assertMainThread();<br>        if (target == null) {<br>            throw new IllegalArgumentException(“You must pass in a non null Target”);<br>        }<br>        if (!isModelSet) {<br>            throw new IllegalArgumentException(“You must first set a model (try #load())”);<br>        }</y></p>
+<pre><code>    Request previous = target.getRequest();
+
+    if (previous != null) {
+        previous.clear();
+        requestTracker.removeRequest(previous);
+        previous.recycle();
+    }
+
+    Request request = buildRequest(target);
+    target.setRequest(request);
+    lifecycle.addListener(target);
+    requestTracker.runRequest(request);
+
+    return target;
+}
+</code></pre><hr>
+<pre><code>/**
+ * Starts tracking the given request.
+ */
+public void runRequest(Request request) {
+    requests.add(request); //添加内存缓存
+    if (!isPaused) {
+        request.begin();// 开始
+    } else {
+        pendingRequests.add(request);// 挂起请求
+    }
+}
+</code></pre><hr>
+<pre><code>@Override
+public void begin() {
+    startTime = LogTime.getLogTime();
+    if (model == null) {// 如果model空的，那么是不能执行的。 
+        onException(null);
+        return;
+    }
+   status = Status.WAITING_FOR_SIZE;// View尺寸已经获取到了,进入开始加载
+    if (Util.isValidDimensions(overrideWidth, overrideHeight)) {
+        onSizeReady(overrideWidth, overrideHeight);
+    } else {
+        target.getSize(this);
+    }
+
+    if (!isComplete() &amp;&amp; !isFailed() &amp;&amp; canNotifyStatusChanged()) {
+        target.onLoadStarted(getPlaceholderDrawable());
+    }
+    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+        logV(&quot;finished run method in &quot; + LogTime.getElapsedMillis(startTime));
+    }
+}
+</code></pre><hr>
+<pre><code>/**
+ *主要的作用就是发起load操作
+ */
+@Override
+public void onSizeReady(int width, int height) {
+    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+        logV(&quot;Got onSizeReady in &quot; + LogTime.getElapsedMillis(startTime));
+    }
+    if (status != Status.WAITING_FOR_SIZE) {
+        return;
+    }
+    status = Status.RUNNING;
+
+    width = Math.round(sizeMultiplier * width);
+    height = Math.round(sizeMultiplier * height);
+
+    ModelLoader&lt;A, T&gt; modelLoader = loadProvider.getModelLoader();
+    final DataFetcher&lt;T&gt; dataFetcher = modelLoader.getResourceFetcher(model, width, height);
+
+    if (dataFetcher == null) {
+        onException(new Exception(&quot;Failed to load model: \&apos;&quot; + model + &quot;\&apos;&quot;));
+        return;
+    }
+    ResourceTranscoder&lt;Z, R&gt; transcoder = loadProvider.getTranscoder();
+    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+        logV(&quot;finished setup for calling load in &quot; + LogTime.getElapsedMillis(startTime));
+    }//调用engine 开始加载
+    loadedFromMemoryCache = true;
+    loadStatus = engine.load(signature, width, height, dataFetcher, loadProvider, transformation, transcoder,
+            priority, isMemoryCacheable, diskCacheStrategy, this);
+    loadedFromMemoryCache = resource != null;
+    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+        logV(&quot;finished onSizeReady in &quot; + LogTime.getElapsedMillis(startTime));
+    }
+}
+</code></pre><hr>
+<pre><code>/**Engine.load的详细过程：*/
+public &lt;T, Z, R&gt; LoadStatus load(Key signature, int width, int height, DataFetcher&lt;T&gt; fetcher,
+        DataLoadProvider&lt;T, Z&gt; loadProvider, Transformation&lt;Z&gt; transformation, ResourceTranscoder&lt;Z, R&gt; transcoder,
+        Priority priority, boolean isMemoryCacheable, DiskCacheStrategy diskCacheStrategy, ResourceCallback cb) {
+    Util.assertMainThread();
+    long startTime = LogTime.getLogTime();
+
+    final String id = fetcher.getId();// 创建key，唯一标示加载资源。
+    EngineKey key = keyFactory.buildKey(id, signature, width, height, loadProvider.getCacheDecoder(),//通过key查找缓存资源
+            loadProvider.getSourceDecoder(), transformation, loadProvider.getEncoder(),
+            transcoder, loadProvider.getSourceEncoder());
+
+    EngineResource&lt;?&gt; cached = loadFromCache(key, isMemoryCacheable);
+    if (cached != null) {
+        cb.onResourceReady(cached);
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            logWithTimeAndKey(&quot;Loaded resource from cache&quot;, startTime, key);
+        }
+        return null;
+    }
+
+    EngineResource&lt;?&gt; active = loadFromActiveResources(key, isMemoryCacheable);//查找二级缓存是否有job
+    if (active != null) {
+        cb.onResourceReady(active);
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            logWithTimeAndKey(&quot;Loaded resource from active resources&quot;, startTime, key);
+        }
+        return null;
+    }
+
+    EngineJob current = jobs.get(key);//获取缓存的job
+    if (current != null) {
+        current.addCallback(cb);
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            logWithTimeAndKey(&quot;Added to existing load&quot;, startTime, key);
+        }
+        return new LoadStatus(cb, current);
+    }
+    EngineJob engineJob = engineJobFactory.build(key, isMemoryCacheable);//创建job
+    DecodeJob&lt;T, Z, R&gt; decodeJob = new DecodeJob&lt;T, Z, R&gt;(key, width, height, fetcher, loadProvider, transformation,
+            transcoder, diskCacheProvider, diskCacheStrategy, priority);
+    EngineRunnable runnable = new EngineRunnable(engineJob, decodeJob, priority);
+    jobs.put(key, engineJob);// 放入线程池，执行
+    engineJob.addCallback(cb);
+    engineJob.start(runnable);//执行线程
+
+    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+        logWithTimeAndKey(&quot;Started new load&quot;, startTime, key);
+    }
+    return new LoadStatus(cb, engineJob);
+}
+</code></pre><blockquote>
+<p>内存缓存：在Glide中默认是LruResourceCache。当然你也可以自定义；<br>两级内存缓存（loadFromActiveResources）。一级缓存采用LRU算法进行缓存，并不能保证全部能命中，添加二级缓存提高命中率之用；</p>
+<p>EngineJob和DecodeJob各自职责：EngineJob充当了管理和调度者，主要负责加载和各类回调通知；DecodeJob是真正干活的劳动者，这个类实现了Runnable接口。</p>
+</blockquote>
+<hr>
+<p>下面来看看DecodeJob是如何执行的：</p>
+<hr>
+<pre><code>@Override
+public void run() {
+    if (isCancelled) {
+        return;
+    }
+
+    Exception exception = null;
+    Resource&lt;?&gt; resource = null;
+    try {
+        resource = decode();
+    } catch (Exception e) {
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            Log.v(TAG, &quot;Exception decoding&quot;, e);
+        }
+        exception = e;
+    }
+
+    if (isCancelled) {
+        if (resource != null) {
+            resource.recycle();
+        }
+        return;
+    }
+
+    if (resource == null) {
+        onLoadFailed(exception);
+    } else {
+        onLoadComplete(resource);
+    }
+}
+</code></pre><hr>
+<pre><code>private Resource&lt;?&gt; decode() throws Exception {
+    if (isDecodingFromCache()) {
+        return decodeFromCache();
+    } else {
+        return decodeFromSource();
+    }
+}
+</code></pre><hr>
+<pre><code>private Resource&lt;T&gt; decodeSource() throws Exception {
+    Resource&lt;T&gt; decoded = null;
+    try {
+        long startTime = LogTime.getLogTime();
+        //从网络获取图片
+        final A data = fetcher.loadData(priority);
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            logWithTimeAndKey(&quot;Fetched data&quot;, startTime);
+        }
+        if (isCancelled) {
+            return null;
+        }
+        decoded = decodeFromSourceData(data);
+    } finally {
+        fetcher.cleanup();
+    }
+    return decoded;
+}
+</code></pre><hr>
+<pre><code>private Resource&lt;T&gt; decodeFromSourceData(A data) throws IOException {
+    final Resource&lt;T&gt; decoded;
+    if (diskCacheStrategy.cacheSource()) {
+        decoded = cacheAndDecodeSourceData(data);
+    } else {
+        long startTime = LogTime.getLogTime();
+        decoded = loadProvider.getSourceDecoder().decode(data, width, height);
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            logWithTimeAndKey(&quot;Decoded from source&quot;, startTime);
+        }
+    }
+    return decoded;
+}
+</code></pre><hr>
+<pre><code>private void onLoadComplete(Resource resource) {
+    manager.onResourceReady(resource);
+}
+</code></pre><hr>
+<pre><code>@Override
+public void onResourceReady(final Resource&lt;?&gt; resource) {
+    this.resource = resource;
+    MAIN_THREAD_HANDLER.obtainMessage(MSG_COMPLETE, this).sendToTarget();
+}
+</code></pre><p>##总结<br>Glide的扩展性非常高，并且支持对处理后的资源Disk缓存，通过BitmapPool对实现了对Bitmap复用，使用activityResources缓存正在使用的resource，对于BitmapPool饱和移除的Bitmap直接调用recycle加速内存回收，通过RequestManager实现了监听LifeRecycle来对图片加载任务的及时回收。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'johnxu819' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="###什么是RxJava
+在GitHub主页上的介绍：
+
+a library for composing asynchronous and event-based programs using observable sequences for the Java VM
+在 Java VM 上使用可观测">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="十分钟了解Android RxJava"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>十分钟了解Android RxJava - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>十分钟了解Android RxJava</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-04-25
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>###什么是RxJava</p>
+<p>在GitHub主页上的介绍：</p>
+<blockquote>
+<p>a library for composing asynchronous and event-based programs using observable sequences for the Java VM</p>
+<p>在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库</p>
+</blockquote>
+<p>本质上来说就是解决了<strong>原来繁琐的异步操作带来的代码不简洁，可读性非常低的问题，尤其在调度过程比较复杂的应用场景下。</strong></p>
+<p>###RxJava 的原理简析</p>
+<p>简单点来说 RxJava 的异步实现 就是观察者模式的通用实现，用过Android 事件处理的同学都知道 Android的事件处理模型就是基于观察者实现的。</p>
+<h5> RxJava  Android 实现三步骤</h5>
+
+<pre><code>//创建一个观察者
+Observer&lt;String&gt; observer = new Observer&lt;String&gt;() {
+
+    @Override
+    public void onCompleted() {
+        Log.i(TAG, &quot;Completed&quot;);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Log.i(TAG, &quot;Error&quot;);
+    }
+
+    @Override
+    public void onNext(String s) {
+        Log.i(TAG, s);
+    }
+};
+//使用Observable.create()创建被观察者
+Observable observable1 = Observable.create(new Observable.OnSubscribe&lt;String&gt;() {
+    @Override
+    public void call(Subscriber&lt;? super String&gt; subscriber) {
+        subscriber.onNext(&quot;Hello&quot;);
+        subscriber.onNext(&quot;Wrold&quot;);
+        subscriber.onCompleted();
+    }
+});
+//订阅
+observable1.subscribe(observer);
+</code></pre><p>###Observable</p>
+<p>create()  最基本的创造事件序列：</p>
+<p>######just(T…):<br>将传入的参数依次发送出来。</p>
+<pre><code>Observable observable = Observable.just(&quot;Hello&quot;, &quot;Hi&quot;, &quot;Aloha&quot;);
+// 将会依次调用：
+// onNext(&quot;Hello&quot;);
+// onNext(&quot;Hi&quot;);
+// onNext(&quot;Aloha&quot;);
+// onCompleted();
+</code></pre><p>#####from(T[])<br> 将传入的数组或 Iterable 拆分成具体对象后，依次发送出来。</p>
+<pre><code>String[] words = {&quot;Hello&quot;, &quot;Hi&quot;, &quot;Aloha&quot;};
+Observable observable = Observable.from(words);
+// 将会依次调用：
+// onNext(&quot;Hello&quot;);
+// onNext(&quot;Hi&quot;);
+// onNext(&quot;Aloha&quot;);
+// onCompleted();
+</code></pre><p> just(T…)   from(T[])  create(OnSubscribe) 创建出来的观察者都是等价的。</p>
+<p>###Subscribe<br><strong>onStart()</strong> 在 subscribe 刚开始调用，可以用于做一些准备工作，例如数据的清零或重置。</p>
+<p><strong>onNext()</strong> 事件回调时调用 （相当于 onClick() / onEvent()）</p>
+<p><strong>onCompleted()</strong> 事件队列完结触发onCompleted()方法。</p>
+<p><strong>onError()</strong> 事件队列异常。在事件处理过程中出异常时，onError()</p>
+<p>在一个正确运行的事件序列中,onCompleted()和onError()有且只有一个，并且是事件序列中的最后一个。需要注意的是，onCompleted()<br>和onError()二者也是互斥的，即在队列中调用了其中一个，就不应该再调用另一个。</p>
+<p>###Action<br>Action 的出现 其实 是一种更简单观察者的实现方式 ，比如我们在处理业务逻辑时 只用了onNext，但是onError和onCompleted并没有用到，那其实另外两个是可以省略掉的。 </p>
+<pre><code>Observable.just(&quot;One&quot;, &quot;Two&quot;).subscribe(new Action1&lt;String&gt;() {
+    @Override
+    public void call(String s) {
+        Log.i(TAG, s);
+    }
+});
+</code></pre><p>###Scheduler<br>RxJava在不指定线程的情况下，发起时间和消费时间默认使用当前线程,所有就油了Scheduler（线程控制器），可以指定每一段代码在什么样的线程中执行。</p>
+<pre><code>Observable.just(&quot;Hello&quot;, &quot;Word&quot;)
+        .subscribeOn(Schedulers.newThread())//指定 subscribe() 发生在新的线程
+        .observeOn(AndroidSchedulers.mainThread())// 指定 Subscriber 的回调发生在主线程
+        .subscribe(new Action1&lt;String&gt;() {
+    @Override
+    public void call(String s) {
+        Log.i(TAG, s);
+    }
+});
+</code></pre><p>######Schedulers.immediate()<br>直接在当前线程运行，相当于不指定线程。这是默认的 Scheduler。</p>
+<p>######Schedulers.newThread()<br>总是启用新线程，并在新线程执行操作。</p>
+<p>######Schedulers.io()<br>I/O 操作（读写文件、读写数据库、网络信息交互等）所使用的 Scheduler。行为模式和 newThread() 差不多，区别在于 io() 的内部实现是是用一个无数量上限的线程池，可以重用空闲的线程，因此多数情况下 io() 比 newThread() 更有效率。不要把计算工作放在 io() 中，可以避免创建不必要的线程。</p>
+<p>######Schedulers.computation()<br>计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU。</p>
+<p>######AndroidSchedulers.mainThread()<br>它指定的操作将在 Android 主线程运行。</p>
+<p>###Observable(map、flatMap)</p>
+<p>######Map  </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1344138-27a3daa0663ed5ed.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>有点类似于Spring 里面的拦截器，我们先假设一个需求，需要打印多个球员的比赛数据。</p>
+<pre><code>Action1&lt;List&lt;Match&gt;&gt; action = new Action1&lt;List&lt;Match&gt;&gt;() {
+    @Override
+    public void call(List&lt;Match&gt; matches) {
+        for (int i = 0; i &lt; matches.size(); i++){
+            Log.i(TAG, matches.get(i).getName());
+        }
+    }
+};
+Observable.from(personList)
+        .map(new Func1&lt;Person, List&lt;Match&gt;&gt;() {
+    @Override
+    public List&lt;Match&gt; call(Person person) {
+        return person.getMatchesList();
+    }
+}).subscribe(action1);
+</code></pre><p>######flatMap</p>
+<p>一般用于输出一个Observable，而其随后的subscribe中的参数也跟Observable中的参数一样，注意不是Observable，一般用于对原始数据返回一个Observable,这个Observable中数据类型可以是原来的，也可以是其他的</p>
+<pre><code>List&lt;Person&gt; persons = new ArrayList&lt;Person&gt;();
+
+Action1&lt;List&lt;Match&gt;&gt; action1 = new Action1&lt;List&lt;Match&gt;&gt;() {
+    @Override
+    public void call(List&lt;Match&gt; matches) {
+        for (int i = 0; i &lt; matches.size(); i++){
+            Log.i(TAG, matches.get(i).getName());
+        }
+    }
+};
+Observable.from(persons)
+        .map(new Func1&lt;Person, List&lt;Match&gt;&gt;() {
+    @Override
+    public List&lt;Course&gt; call(Person person) {
+        //返回coursesList
+        return person.getMatchesList();
+    }
+}).subscribe(action1);
+</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/1344138-e074ce23c61f4768.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>递归转换</p>
+<p>其它处理方法</p>
+<blockquote>
+<p>filter 就是对集合进行过滤<br>each就是遍历集合<br>take取出集合中的前几个<br>skip跳过前几个元素<br>unique相当于按照数学上的集合处理，去重</p>
+</blockquote>
+<p>参考：<a href="http://gank.io/post/560e15be2dca930e00da1083" target="_blank" rel="external">给 Android 开发者的 RxJava 详解</a></p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'johnxu819' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

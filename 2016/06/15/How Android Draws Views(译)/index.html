@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="###How Android Draws Views(译)
+When an Activity receives focus, it will be requested to draw its layout. The Android framework will handle the procedur">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="How Android Draws Views(译)"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>How Android Draws Views(译) - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>How Android Draws Views(译)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-06-15
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>###How Android Draws Views(译)</p>
+<p>When an <a href="https://developer.android.com/reference/android/app/Activity.html" target="_blank" rel="external">Activity</a> receives focus, it will be requested to draw its layout. The Android framework will handle the procedure for drawing, but the  <a href="https://developer.android.com/reference/android/app/Activity.html" target="_blank" rel="external">Activity</a> must provide the root node of its layout hierarchy.</p>
+<p>当Activity得到焦点后，Activity会被系统请求绘制其自身的的layout。Android负责处理绘制的过程，但Activity必须提供其layout树形结构中的根节点。</p>
+<p>Drawing begins with the root node of the layout. It is requested to measure and draw the layout tree. Drawing is handled by walking the tree and rendering each <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> that intersects the invalid region. In turn, each <a href="https://developer.android.com/reference/android/view/ViewGroup.html" target="_blank" rel="external">ViewGroup</a> is responsible for requesting each of its children to be drawn (with the <a href="https://developer.android.com/reference/android/view/View.html#draw(android.graphics.Canvas" target="_blank" rel="external">draw()</a>)<br> method) and each <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> is responsible for drawing itself. Because the tree is traversed in-order, this means that parents will be drawn before (i.e., behind) their children, with siblings drawn in the order they appear in the tree.</p>
+<p>绘制过程从布局的根节点开始。系统要求根节点测量（measure）和绘制（draw）layout树。绘制处理的过程是遍历整棵树，并渲染每一个与无效区域（invalid region）相交的View。每个View group依次请求它的每一个子节点进行绘制（使用draw()方法），每一个View负责绘制它自己。整棵树按顺序进行遍历，因此父节点将在其子节点之前先被绘制（这意味着先绘制的更处于后方）。兄弟节点按他们在树中出现的顺序依次绘制。</p>
+<blockquote>
+<p>The framework will not draw <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> objects that are not in the invalid region, and also will take care of drawing the <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> background for you.You can force a <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> to draw, by calling <a href="https://developer.android.com/reference/android/view/View.html#invalidate(" target="_blank" rel="external">invalidate()</a>)<br>不在无效区域中的View不会被绘制, 同时framework会为你管理处于后台的View的绘制工作. 可以通过调用invalidate()强制一个View进行绘制.</p>
+</blockquote>
+<p>Drawing the layout is a two pass process: a measure pass and a layout pass. The measuring pass is implemented in <a href="https://developer.android.com/reference/android/view/View.html#mesure(int, int" target="_blank" rel="external">measure(int, int)</a>) and is a top-down traversal of the <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> tree. Each <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> pushes dimension specifications down the tree during the recursion. At the end of the measure pass, every <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a>has stored its measurements. The second pass happens in <a href="https://developer.android.com/reference/android/view/View.html#layout(int, int, int, int" target="_blank" rel="external">layout(int, int, int, int)</a>) and is also top-down. During this pass each parent is responsible for positioning all of its children using the sizes computed in the measure pass.When a <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> object’s <a href="https://developer.android.com/reference/android/view/View.html#mesure(int, int" target="_blank" rel="external">measure()</a>) method returns, its <a href="https://developer.android.com/reference/android/view/View.html#getMeasuredWidth(" target="_blank" rel="external">getMeasuredWidth()</a>) and <a href="https://developer.android.com/reference/android/view/View.html#getMeasuredHeight(" target="_blank" rel="external">getMeasuredHeight()</a>) values must be set, along with those for all of that <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> object’s descendants. A <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> object’s measured width and measured height values must respect the constraints imposed by the <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> object’s parents. This guarantees that at the end of the measure pass, all parents accept all of their children’s measurements. A parent <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> may call <a href="https://developer.android.com/reference/android/view/View.html#mesure(int, int" target="_blank" rel="external">measure()</a>) more than once on its children. For example, the parent may measure each child once with unspecified dimensions to find out how big they want to be, then call <a href="https://developer.android.com/reference/android/view/View.html#measure(int, int" target="_blank" rel="external">measure()</a>) on them again with actual numbers if the sum of all the children’s unconstrained sizes is too big or too small (that is, if the children don’t agree among themselves as to how much space they each get, the parent will intervene and set the rules on the second pass).</p>
+<p>layout的绘制有2个过程：测量过程和布局过程。<br>测量过程在measure(int,int)中实现，是一个自顶向下的对View树的遍历过程。在这个递归过程期间，每个View会将它的尺寸规格沿着树向下传递。在测量过程的最后, 每个View保存它们的尺寸.<br>第二个过程布局过程发生在layout(int,int,int,int),也是自顶向下的过程. 在此过程期间, 每个父节点根据在测量过程中的计算结果,负责它的所有子节点的安放和布置.<br>当View的 measure() 方法返回, 它的 getMeasureWidth() 和 getMeasureHeight() 方法必须能返回有意义的值, 根据这个规定,所有View的子节点也必须一致. View的测量后宽度和高度值, 必须遵守其父节点规定的约束值.这保证了在测量过程的最后, 所有的父节点能够适应所有他们的子节点的尺寸. 父View可能会多次调用子节点measure()方法. 举个例子, 在没定下来尺寸的时候, 父节点可能会先测一次每个子节点来找出他们想要多大的尺寸, 如果所有子节点的未受限之前的尺寸总和太大或者太小,会使用实际的数字对他们再次调用measure().(即, 如果子节点不同意它们之间所分配获得的空间大小, 那么父节点将进行调停,并在第二个过程中设定规矩).</p>
+<blockquote>
+<p>To initiate a layout, call <a href="https://developer.android.com/reference/android/view/View.html#requestLayout(" target="_blank" rel="external">requestLayout()</a>). This method is typically called by a <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a>on itself when it believes that is can no longer fit within its current bounds.</p>
+</blockquote>
+<p>The measure pass uses two classes to communicate dimensions. The <a href="https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html" target="_blank" rel="external">ViewGroup.LayoutParams</a> class is used by <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> objects to tell their parents how they want to be measured and positioned.The base <a href="https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html" target="_blank" rel="external">ViewGroup.LayoutParams</a> class just describes how big the <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a><br> wants to be for both width and height. For each dimension, it can specify one of:<br>测量过程使用2个类来负责尺寸的传递和通信. View 使用 View.MeasureSpec 类来告诉父节点如何测量和安放它们自己. 基础的LayoutParams类描述View想要多大的宽度和高度. 对于每一个尺寸规格, 它可以指定如下值:<br>一个精确的数值.</p>
+<p>######1, an exact number</p>
+<p>2,<a href="https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html#MATCH_PARENT" target="_blank" rel="external">MATCH_PARENT</a>, which means the <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> wants to be as big as its parent (minus padding)<br>3,<a href="https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html#WRAP_CONTENT" target="_blank" rel="external">WRAP_CONTENT</a> , which means that the <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> wants to be just big enough to enclose its content (plus padding).<br>FILL_PARENT, 意味着View想要尽量和它的父节点一样大.(减去填充值)<br>WRAP_CONTENT, View想要适应其内容的大小(加上padding值)</p>
+<p>There are subclasses of <a href="https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html" target="_blank" rel="external">ViewGroup.LayoutParams</a> for different subclasses of <a href="https://developer.android.com/reference/android/view/ViewGroup.html" target="_blank" rel="external">ViewGroup</a>. For example, <a href="https://developer.android.com/reference/android/widget/RelativeLayout.html" target="_blank" rel="external">RelativeLayout</a> has its own subclass of<a href="https://developer.android.com/reference/android/view/ViewGroup.LayoutParams.html" target="_blank" rel="external">ViewGroup.LayoutParams</a>, which includes the ability to center child <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a><br> objects horizontally and vertically.<br>若要初始化或请求一个layout, 调用 requestLayout()方法. 典型地,当View确认它不再适合其当前边界时, 它会调用自身的此方法.<br>不同的ViewGroup子类有对应的LayoutParams子类. 例如, RelativeLayout有它自己对应的LayoutParams子类, 包含了可以设置子View水平居中和垂直居中的能力.</p>
+<p>MeasureSpecs 用于自树的父节点到子节点向下专递需求.<br><a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html" target="_blank" rel="external">MeasureSpec</a><br> objects are used to push requirements down the tree from parent to child. A<br>MeasureSpecs 用于自树的父节点到子节点向下专递需求.<br> <a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html" target="_blank" rel="external">MeasureSpec</a><br> can be in one of three modes:<br>MeasureSpec 可以为如下三种模式之一:</p>
+<p><a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html#UNSPECIFIED" target="_blank" rel="external">UNSPECIFIED</a> This is used by a parent to determine the desired dimension of a child <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a>. For example, a <a href="https://developer.android.com/reference/android/widget/LinearLayout.html" target="_blank" rel="external">LinearLayout</a>  may call <a href="https://developer.android.com/reference/android/view/View.html#measure(int, int" target="_blank" rel="external">measure()</a>)on its child with the height set to <a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html#UNSPECIFIED" target="_blank" rel="external">UNSPECIFIED</a> and a width of <a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html#EXACTLY" target="_blank" rel="external">EXACTLY</a> 240 to find out how tall the child <a href="https://developer.android.com/reference/android/view/View.html" target="_blank" rel="external">View</a> wants to be given a width of 240 pixels.<br>UNSPECIFIED: 由父节点使用,决定子View所需的尺寸. 例如, 一个LinearLayout可能会调用子节点的measure() 并设置height为UNSPECIFIED, width为EXACTLY 240, 来找出在给予240像素宽度的情况下,子View有多高.</p>
+<p><a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html#EXACTLY" target="_blank" rel="external">EXACTLY</a>: This is used by the parent to impose an exact size on the child. The child must use this size, and guarantee that all of its descendants will fit within this size.<br>EXACTLY: 由父节点使用,为子节点强制指定一个实际的尺寸. 子节点必须使用这个大小, 并需要保证它的所有孩子都适应这个尺寸.</p>
+<p><a href="https://developer.android.com/reference/android/view/View.MeasureSpec.html#AT_MOST" target="_blank" rel="external">AT MOST</a>: This is used by the parent to impose a maximum size on the child. The child must guarantee that it and all of its descendants will fit within this size.<br>AT_MOST: 由父节点使用,指定子节点的最大尺寸. 子节点必须保证它及它的所有孩子都不得超过此尺寸.</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'johnxu819' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
