@@ -10,6 +10,9 @@
 
     <!--Description-->
     
+        <meta name="description" content="Java HashMap工作原理及实现
+Hash table based implementation of the Map interface. This implementation provides all of the optional map operations, and permits">
+    
 
     <!--Author-->
     
@@ -18,7 +21,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Android Niffler"/>
+        <meta property="og:title" content="Java HashMap工作原理及实现"/>
     
 
     <!--Open Graph Description-->
@@ -29,7 +32,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
     
 
     <!--Page Cover-->
@@ -40,7 +43,7 @@
 
     <!-- Title -->
     
-    <title>Archiv: 2016/2 - Android Niffler</title>
+    <title>Java HashMap工作原理及实现 - Android Niffler</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -134,63 +137,102 @@
 </nav>
 
     <!-- Main Content -->
-    
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
 
-<!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
 <header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>2016/2</h1>
+                <div class="post-heading">
+                    <h1>Java HashMap工作原理及实现</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-02-05
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java基础/">#Java基础</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
             
-                <div class="post-preview">
-    <a href="/2016/02/29/Tomcat 配置详解:优化方案/">
-        <h1 class="post-title archive">
-            Tomcat 配置详解/优化方案
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-02-29
-    </p>
-</div>
+
+            <!-- Gallery -->
             
-                <div class="post-preview">
-    <a href="/2016/02/05/Java HashMap工作原理及实现/">
-        <h1 class="post-title archive">
-            Java HashMap工作原理及实现
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-02-05
-    </p>
-</div>
-            
-            <div class="archive-before-pagination"></div>
-            <ul class="pager">
-    
-    
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="Java-HashMap工作原理及实现"><a href="#Java-HashMap工作原理及实现" class="headerlink" title="Java HashMap工作原理及实现"></a>Java HashMap工作原理及实现</h3><blockquote>
+<p>Hash table based implementation of the Map interface. This implementation provides all of the optional map operations, and permits null values and the null key. (The HashMap class is roughly equivalent to Hashtable, except that it is unsynchronized and permits nulls.) This class makes no guarantees as to the order of the map; in particular, it does not guarantee that the order will remain constant over time.</p>
+</blockquote>
+<p>基于Map接口实现、允许null键/值、非同步、不保证有序(比如插入的顺序)、也不保证序不随时间变化。</p>
+<h3 id="hash函数的实现"><a href="#hash函数的实现" class="headerlink" title="hash函数的实现"></a>hash函数的实现</h3><p>通过hash的方法，通过put和get存储和获取对象。存储对象时，我们将K/V传给put方法时，它调用hashCode计算hash从而得到bucket位置，进一步存储，HashMap会根据当前bucket的占用情况自动调整容量(超过Load Facotr则resize为原来的2倍)。获取对象时，我们将K传给get，它调用hashCode计算hash从而得到bucket位置，并进一步调用equals()方法确定键值对。如果发生碰撞的时候，Hashmap通过链表将产生碰撞冲突的元素组织起来，在Java 8中，如果一个bucket中碰撞冲突的元素超过某个限制(默认是8)，则使用红黑树来替换链表，从而提高速度。</p>
+<h3 id="put-函数的实现-思路"><a href="#put-函数的实现-思路" class="headerlink" title="put 函数的实现 思路"></a>put 函数的实现 思路</h3><ul>
+<li>1，对key 的hashCode（）做hash 然后再计算index</li>
+<li>2，如果没用碰撞直接放到bucket</li>
+<li>3，如果碰撞了 ，以链表的形式存在buckets </li>
+<li>4，如果碰撞导致链表过长 就把链表转换成红黑树</li>
+<li>5，如果节点已经存在就替换old value（保证key 的唯一性）</li>
+<li>6， 如果bucket 满了 （超过load factory * current capacity） 就resize</li>
 </ul>
+<h3 id="get-函数的实现"><a href="#get-函数的实现" class="headerlink" title="get 函数的实现"></a>get 函数的实现</h3><ul>
+<li>1，bucket 里的第一个节点 直接命中</li>
+<li>2，如果有冲突 ，则通过key.equals(k) 去查找对应的entry<br>   若为树 则在树种通过 key.equals(k) o(logn)<br>   若为链表 ，则在链表中通过 key.equals(k) 查找 ，o(n)</li>
+</ul>
+<h3 id="hash的实现"><a href="#hash的实现" class="headerlink" title="hash的实现"></a>hash的实现</h3><p>在Java 1.8的实现中，是通过hashCode()的高16位异或低16位实现的：(h = k.hashCode()) ^ (h &gt;&gt;&gt; 16)，主要是从速度、功效、质量来考虑的，这么做可以在bucket的n比较小的时候，也能保证考虑到高低bit都参与到hash的计算中，同时不会有太大的开销。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'johnxu819' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
         </div>
     </div>
-</div>
-
-
+</article>
 
     <!-- Footer -->
     <hr />
