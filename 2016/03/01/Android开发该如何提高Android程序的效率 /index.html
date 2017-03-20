@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="安卓开发中的安卓程序效率很重要，如果你做出一款登录很慢，打开很延时的产品，相信很多人都不愿意去使用，那么如何提高Android程序效率呢，也就是如何来优化Android的性能呢？本文提供给你一些想法，希望能够给广大安卓开发者带来灵感：
+1 首先要有良好的编码习惯一个优秀的开发者应该善于运用常识、完善">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Android开发该如何提高Android程序的效率"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Android开发该如何提高Android程序的效率 - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Android Niffler</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Android开发该如何提高Android程序的效率</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-03-01
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>安卓开发中的安卓程序效率很重要，如果你做出一款登录很慢，打开很延时的产品，相信很多人都不愿意去使用，那么如何提高Android程序效率呢，也就是如何来优化Android的性能呢？本文提供给你一些想法，希望能够给广大安卓开发者带来灵感：</p>
+<p>1 首先要有良好的编码习惯<br>一个优秀的开发者应该善于运用常识、完善的算法和标准设计模式。要有资源意识，打开了就要记得关闭，尽量做到晚获取，早释放。这些由来已久的编码准则同样适用Android应用开发，尤其是使用基础设备服务时。</p>
+<p>2 让阻塞操作远离主UI线程<br>通过使用AsyncTask、线程、IntentService和自定义后台服务，保证应用的灵活性。使用加载工具简化游标等长时间加载数据的状态管理。当有其他程序运行时，不能让你的应用滞后或中止。<br>如果一个操作需要消耗较多时间和资源时，取消该操作，换成异步处理，这样应用就能保持响应，用户可以继续各种操作。该方法适用磁盘读写、访问内容提供方、数据库和互联网，以及解析和其他需要花费较长时间的任务。</p>
+<p>3 使用最新的Android SDK版本和API<br>使用Android平台的最新产品，保证你的应用紧跟Android的更新步伐。随着Android平台的不断发展，部分功能可能被弃用或被更好的功能取代，核心API接收了bug修复和性能改进，新API有助于开发者编写出更稳定的应用。要明白最佳的做法总是随着时间的推移而变，聪明的开发者应该总是站在整个平台的最前沿。</p>
+<p>4 考虑使用StrictMode<br>从Android 2.3开始提供了一个新的类StrictMode，该类可以用于捕捉发生在应用程序主线程中耗时的磁盘、网络访问或函数调用，可以帮助开发者改进程序，使主线程处理UI和动画在磁盘读写和网络操作时变得更平滑，避免主线程被阻塞。</p>
+<p>5 发布前禁用或尽量减少调试<br>如果开发周期较长，你很可能在应用中内置了一些日志或调试代码，在发布前确保这些功能已经最小化或完全禁用。</p>
+<p>6 确保UI布局简单优雅<br>简单的屏幕不仅方便阅读，还能加快加载速度。与其在一个单一屏幕上堆砌太多不必要的功能，不如花时间去开发优雅的用户界面。简单优雅的UI不仅能提高应用性能，还能提高用户使用该应用时的效率。</p>
+<p>7 根据目标设备调整应用资源<br>为尽可能高效地被加载，需要根据具体设备的配置调整相应资源，尤其是图片资源。为使应用包文件合理适用不同设备，首先可只添加运行该应用需要的核心资源，然后再根据具体设备下载相关内容。</p>
+<p>8 使用Hierachy Viewer可视化调试工具<br>Hierachy Viewer能很方便地在开发者设计，调试和调整界面时，快速定位问题，解决问题，提高开发效率。</p>
+<p>9 使用layoutopt进行布局优化<br>Layoutopt是一款简单的命令行工具，可帮助找到不必要的控件嵌套以及缩减布局资源，从而使应用变得可能“苗条”。控件越少、布局层次越浅，性能就越好。</p>
+<p>10 使用Traceview及其他Android工具进行分析<br>Android SDK随带了很多用于应用分析的工具，其中最受欢迎的是Traceview，这款图形工具可以帮助调试和找到应用中的性能瓶颈。</p>
+<p>11 http用gzip压缩，设置连接超时时间和响应超时时间<br>http请求按照业务需求，分为是否可以缓存和不可缓存，那么在无网络的环境中，仍然通过缓存的httpresponse浏览部分数据，实现离线阅读。</p>
+<p>12  使用线程池，分为核心线程池和普通线程池，下载图片等耗时任务放置在普通线程池，避免耗时任务阻塞线程池后，导致所有异步任务都必须等待</p>
+<p>13listview 性能优化<br>(1).异步加载图片<br>item中如果包含有webimage，那么最好异步加载<br>(2).快速滑动时不显示图片<br>当快速滑动列表时（SCROLL_STATE_FLING），item中的图片或获取需要消耗资源的view，可以不显示出来；<br>而处于其他两种状态（SCROLL_STATE_IDLE 和SCROLL_STATE_TOUCH_SCROLL），则将那些view显示出来<br>(3).复用convertView<br>在getItemView中，判断convertView是否为空，如果不为空，可复用。如果couvertview中的view需要添加listerner，代码一定要在if(convertView==null){}之外。<br>(4).BaseAdapter避免内存溢出<br>如果BaseAdapter的实体类有属性非常消耗内存，可以将保存到文件；为提高性能，可以进行缓存，并限制缓存大小。</p>
+<p>(14）尽量避免static成员变量引用资源耗费过多的实例,比如Context<br>5.异步任务，分为核心任务和普通任务，只有核心任务中出现的系统级错误才会报错，异步任务的ui操作需要判断原activity是否处于激活状态</p>
+<p>(15）保证Cursor 占用的内存被及时的释放掉，而不是等待GC来处理。并且 Android明显是倾向于编 程者手动的将Cursor close掉</p>
+<p>(16）线程也是造成内存泄露的一个重要的源头<br>线程产生内存泄露的主要原因在于线程 生命周期的不可控</p>
+<p>(17）使用WeakReference代替强引用，弱引用可以让您保持对对象的引用，同时允许GC在必要时释放对象，回收内存,对于那些创建便宜但耗费大量内存的对象，即希望保持该对象，又要在应用程序需要时使用，同时希望GC必要时回收时，可以考虑使用弱引用。</p>
+<p>(18）超级大胖子Bitmap及时的销毁(Activity的onDestroy时将bitmap回收，在被UI组件使用后马上进行回收会抛 RuntimeException: Canvas: trying to use a recycled bitmap android.graphics.Bitmap)设置一定的采样率(有开发者提供的图片无需进行采样，对于有用户上传或第三方的大小不可控图片，可进行采样减少图片所占的内存)，从服务端返回图片，建议同时反馈图片的size巧妙的运用软引用drawable对应resid的资源，bitmap对应其他资源任何类型的图片，如果获取不到（例如文件不存在，或者读取文件时跑OutOfMemory异常），应该有对应的默认图片（默认图片放在在apk中，通过resid获取）；</p>
+<p>(19）Drawable中ui组件需要用到的图片是apk包自带的，那么一律用setImageResource或者setBackgroundResource，而不要根据resourceid注意：get(getResources(), R.drawable.btn_achievement_normal)该方法通过resid转换为drawable，需要考虑回收的问题，如果drawable是对象私有对象，在对象销毁前是肯定不会释放内存的。</p>
+<p>(20）复用回收Activity对象临时的activity及时finish主界面设置为singleTask一般界面设置为singleTop</p>
+<p>(21）如果ImageView的图片是来自网络，进行异步加载</p>
+<p>(22）应用开发中自定义View的时候，交互部分，千万不要写成线程不断刷新界面显示，而是根据TouchListener事件主动触发界面的更新</p>
+<p>(23）在onResume时设置该界面的电源管理，在onPause时取消设置</p>
+<p>(24）位置信息获取用户的地理位置信息时，在需要获取数据的时候打开GPS，之后及时关闭掉</p>
+<p>(25）耗时操作<br>有哪些耗时的操作呢？最常见的是网络连接操作，网络状态随着环境的变化有很大差异，网络好的地方可能速度很快，但网络差的地方需要等待很长时间，所以一定不能在UI线程中执行网络操作。另外就是数据库操作和SD卡文件的读写操作，这些操作都尽量不要在UI线程中完成，对于数据库操作，我们可以建一些索引来提高程序运行速度。<br>模拟器和真实的设备<br>在模拟器和真实的设备上运行也有很大的差异，模拟器需要更好的CPU，如果你的电脑性能很差，你就会感觉到运行速度很慢，但如果在真实的设备上运行会很快，另外模拟器使用的是系统硬盘，访问速度会比真实的设备访问SD卡快很多。</p>
+<p>(26）通知用户<br>当需要用户等待时，一定要用进度条等告诉用户程序还在运行中，不要让用户界面卡死，使用一些正在载入的动画会让用户有更好的使用体验。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'johnxu819' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
