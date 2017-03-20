@@ -10,13 +10,13 @@
 
     <!--Description-->
     
-        <meta name="description" content="1、Tomcat的目录层次结构
+        <meta name="description" content="###1、Tomcat的目录层次结构
 bin:   存放启动和关闭Tomcat的脚本文件
 conf： 存放Tomcat服务器的各种配置文件
 lib:   存放tomcat服务器支撑的jar包
 logs:  存放Tomcat的日志文件
 temp:  存放Tomcat运行时产生的临时文件
-webapps:we">
+webapps">
     
 
     <!--Author-->
@@ -182,7 +182,7 @@ webapps:we">
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <p>1、Tomcat的目录层次结构</p>
+                <p>###1、Tomcat的目录层次结构</p>
 <p>bin:   存放启动和关闭Tomcat的脚本文件</p>
 <p>conf： 存放Tomcat服务器的各种配置文件</p>
 <p>lib:   存放tomcat服务器支撑的jar包</p>
@@ -190,17 +190,17 @@ webapps:we">
 <p>temp:  存放Tomcat运行时产生的临时文件</p>
 <p>webapps:web应用虽在目录，即供外界访问的web资源的存放目录</p>
 <p>work:  Tomcat的工作目录</p>
-<p>2、JavaWeb应用的组成结构</p>
+<p>###2、JavaWeb应用的组成结构</p>
 <p>|—-html、jsp、css、js等文件，根目录下的文件外界可以直接访问</p>
 <p>|—-WEB-INF目录</p>
 <p>|———classes目录(java类)</p>
 <p>|———lib目录(java类运行所需的jar包)</p>
 <p>|———web.xml(web应用的配置文件)</p>
 <p>WEB-INF 这个目录下的文件外界无法直接访问，由web服务器负责调用</p>
-<p>3、JavaWeb应用的发布</p>
+<p>###3、JavaWeb应用的发布</p>
 <p>开放式目录方式：</p>
 <p>打包war方式:   使用   Jar -cvf *.war .</p>
-<p>4、Tomcat的Server.xml文件</p>
+<p>###4、Tomcat的Server.xml文件</p>
 <p>Tomcat本身由一系列可配置的组件构成，其中核心组件是Servlet容器组件，它是所有其他Tomcat组件的顶层容器。每个组件都可以在Tomcat安装目录/conf/server.xml文件中进行配置，每个Tomcat组件在server.xml文件中对应一种配置元素。</p>
 <p>server.xml被称为Tomcat的主配置文件或全局配置文件，它完成两个任务：</p>
 <p>（1）提供Tomcat组件的初始配置</p>
@@ -256,15 +256,17 @@ webapps:we">
 <p>将这个请求匹配到某个去处理，因为这里默认处理的是localhost，所以请求传递到name属性是localhost的。</p>
 <p>根据地址串中的子目录为”test”,获知能够处理该请求的Servlet存放在虚拟目录为”test”的Web应用中，于是通过查找元素，找到path=”test” 的,然后根据中的物理路径”docBase”的属性值查找Web应用的物理地址；</p>
 <p>服务器根据对应的Web应用的“WEB_INF/web.xml”配置文件，查找能够处理index.jsp的servlet;</p>
-<p>5、Tomcat配置优化</p>
+<p>###5、Tomcat配置优化</p>
 <p>1 ,增加JVM堆内存大小</p>
 <p>通过修改conf 目录下的 catalina.sh文件</p>
-<p>JAVA_OPTS=”-Djava.awt.headless=true -Dfile.encoding=UTF-8</p>
-<p>-server -Xms1024m -Xmx1024m</p>
-<p>-XX:NewSize=512m -XX:MaxNewSize=512m -XX:PermSize=512m</p>
-<p>-XX:MaxPermSize=512m -XX:+DisableExplicitGC”</p>
-<p>-Xms – 指定初始化时化的栈内存</p>
-<p>-Xmx – 指定最大栈内存</p>
+<pre><code>JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8
+-server -Xms1024m -Xmx1024m
+-XX:NewSize=512m -XX:MaxNewSize=512m -XX:PermSize=512m
+-XX:MaxPermSize=512m -XX:+DisableExplicitGC"
+-Xms – 指定初始化时化的栈内存
+-Xmx – 指定最大栈内存
+</code></pre>
+
 <p>在重启你的Tomcat服务器之后，这些配置的更改才会有效。</p>
 <p>2,maxThreads 连接数限制</p>
 <p>maxThreads 是 Tomcat 所能接受最大连接数。一般设置不要超过8000以上，如果你的网站访问量非常大可能使用   运行多个Tomcat实例的方法。</p>
@@ -281,45 +283,21 @@ webapps:we">
 <p>1，当Tomcat完成安装后你首先要做的事情如下：首次安装完成后立即删除webapps下面的所有代码</p>
 <p>rm -rf /srv/apache-tomcat/webapps/*</p>
 <p>注释或删除 tomcat-users.xml 所有用户权限，看上去如下：</p>
-<h1 id="cat-conf-tomcat-users-xml"><a href="#cat-conf-tomcat-users-xml" class="headerlink" title="cat conf/tomcat-users.xml"></a>cat conf/tomcat-users.xml</h1><p>2， 隐藏版本信息</p>
+<p> cat conf/tomcat-users.xml</p>
+<p>2， 隐藏版本信息</p>
 <p>隐藏Tomcat版本信息</p>
 <p>vim $CATALINA_HOME/conf/server.xml</p>
-<p>connectionTimeout=”20000”</p>
-<p>redirectPort=”8443”</p>
-<p>maxThreads=”8192”</p>
-<p>minSpareThreads=”64”</p>
-<p>maxSpareThreads=”128”</p>
-<p>acceptCount=”128”</p>
-<p>enableLookups=”false”</p>
-<p>server=”Neo App Srv 1.0”/&gt;</p>
+<p><pre><code>connectionTimeout=”20000”<br>redirectPort=”8443”<br>maxThreads=”8192”<br>minSpareThreads=”64”<br>maxSpareThreads=”128”<br>acceptCount=”128”<br>enableLookups=”false”<br>server=”Neo App Srv 1.0”/&gt;<br></code></pre></p>
 <p>运行  <a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a></p>
 <p>服务器信息已经被改为 Server: Neo App Srv 1.0</p>
 <p>3， 应用程序安全</p>
 <p>关闭war自动部署 unpackWARs=”false” autoDeploy=”false”。防止被植入木马等恶意程序</p>
 <p>关闭 reloadable=”false” 也用于防止被植入木马</p>
-<p>6、Tomcat配置优化后实例</p>
-<p>type=”org.apache.catalina.UserDatabase”</p>
-<p>description=”User database that can be updated and saved”</p>
-<p>factory=”org.apache.catalina.users.MemoryUserDatabaseFactory”</p>
-<p>pathname=”conf/tomcat-users.xml”/&gt;</p>
+<p>###Tomcat配置优化后实例</p>
+<p><pre><code>type=”org.apache.catalina.UserDatabase”<br>description=”User database that can be updated and saved”<br>factory=”org.apache.catalina.users.MemoryUserDatabaseFactory”<br>pathname=”conf/tomcat-users.xml”/&gt;</code></pre></p>
 <p>一组Connector和一个Engine的集合，这组Connector共用一个Engine来处理所有Connector收到的请求，</p>
 <p>负责处理所获得到的请求</p>
-<p>–&gt;</p>
-<p>protocol=”HTTP/1.1”</p>
-<p>URIEncoding=”UTF-8”</p>
-<p>minSpareThreads=”25”</p>
-<p>maxSpareThreads=”75”</p>
-<p>enableLookups=”false”</p>
-<p>disableUploadTimeout=”true”</p>
-<p>connectionTimeout=”20000”</p>
-<p>acceptCount=”300”</p>
-<p>maxThreads=”300”</p>
-<p>maxProcessors=”1000”</p>
-<p>minProcessors=”5”</p>
-<p>useURIValidationHack=”false”</p>
-<p>redirectPort=”8443”</p>
-<p>server=”Homeat App Srv 1.0”</p>
-<p>/&gt;</p>
+<p><pre><code>protocol=”HTTP/1.1”<br>URIEncoding=”UTF-8”<br>minSpareThreads=”25”<br>maxSpareThreads=”75”<br>enableLookups=”false”<br>disableUploadTimeout=”true”<br>connectionTimeout=”20000”<br>acceptCount=”300”<br>maxThreads=”300”<br>maxProcessors=”1000”<br>minProcessors=”5”<br>useURIValidationHack=”false”<br>redirectPort=”8443”<br>server=”Homeat App Srv 1.0”/&gt;</code></pre></p>
 
 
                 
