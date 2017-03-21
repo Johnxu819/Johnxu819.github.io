@@ -10,7 +10,13 @@
 
     <!--Description-->
     
-        <meta name="description" content="重构壹球ONEBALL-Android架构组织架构优化内存优化网络优化电池耗电优化">
+        <meta name="description" content="重构壹球ONEBALL-Android架构gradle和编译速度优化重构前
+gradle 引用lib 混乱，甚至出现lib 和lib 之间相互引用，
+build.gradle 里面功能混乱，既有混淆的功能又有引用库的功能。
+compileSdkVersion 不统一
+编译速度慢
+
+重构后gradle">
     
 
     <!--Author-->
@@ -184,7 +190,20 @@
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h3 id="重构壹球ONEBALL-Android架构"><a href="#重构壹球ONEBALL-Android架构" class="headerlink" title="重构壹球ONEBALL-Android架构"></a>重构壹球ONEBALL-Android架构</h3><h3 id="组织架构优化"><a href="#组织架构优化" class="headerlink" title="组织架构优化"></a>组织架构优化</h3><h3 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h3><h3 id="网络优化"><a href="#网络优化" class="headerlink" title="网络优化"></a>网络优化</h3><h3 id="电池耗电优化"><a href="#电池耗电优化" class="headerlink" title="电池耗电优化"></a>电池耗电优化</h3>
+                <h3 id="重构壹球ONEBALL-Android架构"><a href="#重构壹球ONEBALL-Android架构" class="headerlink" title="重构壹球ONEBALL-Android架构"></a>重构壹球ONEBALL-Android架构</h3><h3 id="gradle和编译速度优化"><a href="#gradle和编译速度优化" class="headerlink" title="gradle和编译速度优化"></a>gradle和编译速度优化</h3><h5 id="重构前"><a href="#重构前" class="headerlink" title="重构前"></a>重构前</h5><ul>
+<li>gradle 引用lib 混乱，甚至出现lib 和lib 之间相互引用，</li>
+<li>build.gradle 里面功能混乱，既有混淆的功能又有引用库的功能。</li>
+<li>compileSdkVersion 不统一</li>
+<li>编译速度慢</li>
+</ul>
+<h5 id="重构后"><a href="#重构后" class="headerlink" title="重构后"></a>重构后</h5><p>gradle 核心要做的事情无非三件事情，引用，混淆，编译，我们要想优化gradle的编译速度，主要做的事情就是尽量的减少 引用，开发模式下不混淆，才能够以最快的速度使用我们gradle 来编译我们的项目</p>
+<ul>
+<li>单个gradle，只做一件事</li>
+<li>引用库的引用单独配置</li>
+<li>app 只引用一个commonlibrary 并把这个commonlibrary 打成aar包</li>
+<li>修改android studio配置在android studio的配置中，开启offline模式</li>
+</ul>
+<h5 id="重构后的gradle架构图"><a href="#重构后的gradle架构图" class="headerlink" title="重构后的gradle架构图"></a>重构后的gradle架构图</h5><h5 id="重构后的gradle编译速度"><a href="#重构后的gradle编译速度" class="headerlink" title="重构后的gradle编译速度"></a>重构后的gradle编译速度</h5><h3 id="启动速度优化"><a href="#启动速度优化" class="headerlink" title="启动速度优化"></a>启动速度优化</h3><h3 id="组织架构优化"><a href="#组织架构优化" class="headerlink" title="组织架构优化"></a>组织架构优化</h3><h3 id="内存优化"><a href="#内存优化" class="headerlink" title="内存优化"></a>内存优化</h3><h3 id="网络优化"><a href="#网络优化" class="headerlink" title="网络优化"></a>网络优化</h3><h3 id="电池耗电优化"><a href="#电池耗电优化" class="headerlink" title="电池耗电优化"></a>电池耗电优化</h3><h3 id="发布包体积优化"><a href="#发布包体积优化" class="headerlink" title="发布包体积优化"></a>发布包体积优化</h3><h3 id="快速开发插件"><a href="#快速开发插件" class="headerlink" title="快速开发插件"></a>快速开发插件</h3>
 
                 
             </div>
