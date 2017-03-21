@@ -10,11 +10,8 @@
 
     <!--Description-->
     
-        <meta name="description" content="###什么是RxJava
-在GitHub主页上的介绍：
-
-a library for composing asynchronous and event-based programs using observable sequences for the Java VM
-在 Java VM 上使用可观测">
+        <meta name="description" content="什么是RxJava在GitHub主页上的介绍：
+ a library for composing asynchronous and event-based programs using observable sequences for the Java VM 在 Java VM 上使用可观测的序列来">
     
 
     <!--Author-->
@@ -188,15 +185,11 @@ a library for composing asynchronous and event-based programs using observable s
 
             <!-- Post Main Content -->
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <p>###什么是RxJava</p>
-<p>在GitHub主页上的介绍：</p>
-<blockquote>
-<p>a library for composing asynchronous and event-based programs using observable sequences for the Java VM</p>
-<p>在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库</p>
-</blockquote>
+                <h3 id="什么是RxJava"><a href="#什么是RxJava" class="headerlink" title="什么是RxJava"></a>什么是RxJava</h3><p>在GitHub主页上的介绍：</p>
+<p> a library for composing asynchronous and event-based<br> programs using observable sequences for the Java VM<br> 在 Java VM 上使用可观测的序列来组成异步的、基于事件的程序的库<br> </p>
+
 <p>本质上来说就是解决了<strong>原来繁琐的异步操作带来的代码不简洁，可读性非常低的问题，尤其在调度过程比较复杂的应用场景下。</strong></p>
-<p>###RxJava 的原理简析</p>
-<p>简单点来说 RxJava 的异步实现 就是观察者模式的通用实现，用过Android 事件处理的同学都知道 Android的事件处理模型就是基于观察者实现的。</p>
+<h3 id="RxJava-的原理简析"><a href="#RxJava-的原理简析" class="headerlink" title="RxJava 的原理简析"></a>RxJava 的原理简析</h3><p>简单点来说 RxJava 的异步实现 就是观察者模式的通用实现，用过Android 事件处理的同学都知道 Android的事件处理模型就是基于观察者实现的。</p>
 <h5> RxJava  Android 实现三步骤</h5>
 
 <pre><code>//创建一个观察者
@@ -228,16 +221,15 @@ Observable observable1 = Observable.create(new Observable.OnSubscribe&lt;String&
 });
 //订阅
 observable1.subscribe(observer);
-</code></pre><p>###Observable</p>
-<p>create()  最基本的创造事件序列：</p>
-<p>######just(T…):<br>将传入的参数依次发送出来。</p>
+</code></pre><h3 id="Observable"><a href="#Observable" class="headerlink" title="Observable"></a>Observable</h3><p>create()  最基本的创造事件序列：</p>
+<h6 id="just-T…"><a href="#just-T…" class="headerlink" title="just(T…):"></a>just(T…):</h6><p>将传入的参数依次发送出来。</p>
 <pre><code>Observable observable = Observable.just(&quot;Hello&quot;, &quot;Hi&quot;, &quot;Aloha&quot;);
 // 将会依次调用：
 // onNext(&quot;Hello&quot;);
 // onNext(&quot;Hi&quot;);
 // onNext(&quot;Aloha&quot;);
 // onCompleted();
-</code></pre><p>#####from(T[])<br> 将传入的数组或 Iterable 拆分成具体对象后，依次发送出来。</p>
+</code></pre><h5 id="from-T"><a href="#from-T" class="headerlink" title="from(T[])"></a>from(T[])</h5><p> 将传入的数组或 Iterable 拆分成具体对象后，依次发送出来。</p>
 <pre><code>String[] words = {&quot;Hello&quot;, &quot;Hi&quot;, &quot;Aloha&quot;};
 Observable observable = Observable.from(words);
 // 将会依次调用：
@@ -246,19 +238,19 @@ Observable observable = Observable.from(words);
 // onNext(&quot;Aloha&quot;);
 // onCompleted();
 </code></pre><p> just(T…)   from(T[])  create(OnSubscribe) 创建出来的观察者都是等价的。</p>
-<p>###Subscribe<br><strong>onStart()</strong> 在 subscribe 刚开始调用，可以用于做一些准备工作，例如数据的清零或重置。</p>
+<h3 id="Subscribe"><a href="#Subscribe" class="headerlink" title="Subscribe"></a>Subscribe</h3><p><strong>onStart()</strong> 在 subscribe 刚开始调用，可以用于做一些准备工作，例如数据的清零或重置。</p>
 <p><strong>onNext()</strong> 事件回调时调用 （相当于 onClick() / onEvent()）</p>
 <p><strong>onCompleted()</strong> 事件队列完结触发onCompleted()方法。</p>
 <p><strong>onError()</strong> 事件队列异常。在事件处理过程中出异常时，onError()</p>
 <p>在一个正确运行的事件序列中,onCompleted()和onError()有且只有一个，并且是事件序列中的最后一个。需要注意的是，onCompleted()<br>和onError()二者也是互斥的，即在队列中调用了其中一个，就不应该再调用另一个。</p>
-<p>###Action<br>Action 的出现 其实 是一种更简单观察者的实现方式 ，比如我们在处理业务逻辑时 只用了onNext，但是onError和onCompleted并没有用到，那其实另外两个是可以省略掉的。 </p>
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>Action 的出现 其实 是一种更简单观察者的实现方式 ，比如我们在处理业务逻辑时 只用了onNext，但是onError和onCompleted并没有用到，那其实另外两个是可以省略掉的。 </p>
 <pre><code>Observable.just(&quot;One&quot;, &quot;Two&quot;).subscribe(new Action1&lt;String&gt;() {
     @Override
     public void call(String s) {
         Log.i(TAG, s);
     }
 });
-</code></pre><p>###Scheduler<br>RxJava在不指定线程的情况下，发起时间和消费时间默认使用当前线程,所有就油了Scheduler（线程控制器），可以指定每一段代码在什么样的线程中执行。</p>
+</code></pre><h3 id="Scheduler"><a href="#Scheduler" class="headerlink" title="Scheduler"></a>Scheduler</h3><p>RxJava在不指定线程的情况下，发起时间和消费时间默认使用当前线程,所有就油了Scheduler（线程控制器），可以指定每一段代码在什么样的线程中执行。</p>
 <pre><code>Observable.just(&quot;Hello&quot;, &quot;Word&quot;)
         .subscribeOn(Schedulers.newThread())//指定 subscribe() 发生在新的线程
         .observeOn(AndroidSchedulers.mainThread())// 指定 Subscriber 的回调发生在主线程
@@ -268,14 +260,12 @@ Observable observable = Observable.from(words);
         Log.i(TAG, s);
     }
 });
-</code></pre><p>######Schedulers.immediate()<br>直接在当前线程运行，相当于不指定线程。这是默认的 Scheduler。</p>
-<p>######Schedulers.newThread()<br>总是启用新线程，并在新线程执行操作。</p>
-<p>######Schedulers.io()<br>I/O 操作（读写文件、读写数据库、网络信息交互等）所使用的 Scheduler。行为模式和 newThread() 差不多，区别在于 io() 的内部实现是是用一个无数量上限的线程池，可以重用空闲的线程，因此多数情况下 io() 比 newThread() 更有效率。不要把计算工作放在 io() 中，可以避免创建不必要的线程。</p>
-<p>######Schedulers.computation()<br>计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU。</p>
-<p>######AndroidSchedulers.mainThread()<br>它指定的操作将在 Android 主线程运行。</p>
-<p>###Observable(map、flatMap)</p>
-<p>######Map  </p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1344138-27a3daa0663ed5ed.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</code></pre><h6 id="Schedulers-immediate"><a href="#Schedulers-immediate" class="headerlink" title="Schedulers.immediate()"></a>Schedulers.immediate()</h6><p>直接在当前线程运行，相当于不指定线程。这是默认的 Scheduler。</p>
+<h6 id="Schedulers-newThread"><a href="#Schedulers-newThread" class="headerlink" title="Schedulers.newThread()"></a>Schedulers.newThread()</h6><p>总是启用新线程，并在新线程执行操作。</p>
+<h6 id="Schedulers-io"><a href="#Schedulers-io" class="headerlink" title="Schedulers.io()"></a>Schedulers.io()</h6><p>I/O 操作（读写文件、读写数据库、网络信息交互等）所使用的 Scheduler。行为模式和 newThread() 差不多，区别在于 io() 的内部实现是是用一个无数量上限的线程池，可以重用空闲的线程，因此多数情况下 io() 比 newThread() 更有效率。不要把计算工作放在 io() 中，可以避免创建不必要的线程。</p>
+<h6 id="Schedulers-computation"><a href="#Schedulers-computation" class="headerlink" title="Schedulers.computation()"></a>Schedulers.computation()</h6><p>计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU。</p>
+<h6 id="AndroidSchedulers-mainThread"><a href="#AndroidSchedulers-mainThread" class="headerlink" title="AndroidSchedulers.mainThread()"></a>AndroidSchedulers.mainThread()</h6><p>它指定的操作将在 Android 主线程运行。</p>
+<h3 id="Observable-map、flatMap"><a href="#Observable-map、flatMap" class="headerlink" title="Observable(map、flatMap)"></a>Observable(map、flatMap)</h3><h6 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h6><p><img src="http://upload-images.jianshu.io/upload_images/1344138-27a3daa0663ed5ed.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>有点类似于Spring 里面的拦截器，我们先假设一个需求，需要打印多个球员的比赛数据。</p>
 <pre><code>Action1&lt;List&lt;Match&gt;&gt; action = new Action1&lt;List&lt;Match&gt;&gt;() {
     @Override
@@ -292,8 +282,7 @@ Observable.from(personList)
         return person.getMatchesList();
     }
 }).subscribe(action1);
-</code></pre><p>######flatMap</p>
-<p>一般用于输出一个Observable，而其随后的subscribe中的参数也跟Observable中的参数一样，注意不是Observable，一般用于对原始数据返回一个Observable,这个Observable中数据类型可以是原来的，也可以是其他的</p>
+</code></pre><h6 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h6><p>一般用于输出一个Observable，而其随后的subscribe中的参数也跟Observable中的参数一样，注意不是Observable，一般用于对原始数据返回一个Observable,这个Observable中数据类型可以是原来的，也可以是其他的</p>
 <pre><code>List&lt;Person&gt; persons = new ArrayList&lt;Person&gt;();
 
 Action1&lt;List&lt;Match&gt;&gt; action1 = new Action1&lt;List&lt;Match&gt;&gt;() {
@@ -315,9 +304,13 @@ Observable.from(persons)
 </code></pre><p><img src="http://upload-images.jianshu.io/upload_images/1344138-e074ce23c61f4768.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>递归转换</p>
 <p>其它处理方法</p>
-<blockquote>
-<p>filter 就是对集合进行过滤<br>each就是遍历集合<br>take取出集合中的前几个<br>skip跳过前几个元素<br>unique相当于按照数学上的集合处理，去重</p>
-</blockquote>
+<ul>
+<li>filter 就是对集合进行过滤</li>
+<li>each就是遍历集合</li>
+<li>take取出集合中的前几个</li>
+<li>skip跳过前几个元素</li>
+<li>unique相当于按照数学上的集合处理，去重</li>
+</ul>
 <p>参考：<a href="http://gank.io/post/560e15be2dca930e00da1083" target="_blank" rel="external">给 Android 开发者的 RxJava 详解</a></p>
 
 
