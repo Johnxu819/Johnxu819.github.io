@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="垃圾收集器与内存分配策略Java 内存运行时区域的各个部分，其中程序计算器，虚拟机栈，本地方法栈3个区域随线程而生，随线程而灭：栈中的栈帧随着方法的进入和退出而有条不紊的执行出栈和入栈的操作，每一个栈帧中分配多少内存基本上是在类结构确定下来时就已知的，因此这几个区域的内存分配和回收都具备确定性，在这">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="深入Java虚拟机(二)"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>深入Java虚拟机(二) - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>深入Java虚拟机(二)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-06-02
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java虚拟机/">#Java虚拟机</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="垃圾收集器与内存分配策略"><a href="#垃圾收集器与内存分配策略" class="headerlink" title="垃圾收集器与内存分配策略"></a>垃圾收集器与内存分配策略</h3><p>Java 内存运行时区域的各个部分，其中程序计算器，虚拟机栈，本地方法栈3个区域随线程而生，随线程而灭：栈中的栈帧随着方法的进入和退出而有条不紊的执行出栈和入栈的操作，每一个栈帧中分配多少内存基本上是在类结构确定下来时就已知的，因此这几个区域的内存分配和回收都具备确定性，在这几个区域内就不需要多考虑回收的问题，因为方法结束或者线程结束时，内存自然就跟随着回收了。而Java堆和方法区则不一样，一个接口中的多个实现类需要的内存可能不一样，一个方法中的多个分支需要的内存也可能不一样，我们只有在程序处于运行期间才能知道会创建哪些对象，这部分内存的分配和回收都是动态的，垃圾收集器所关注的就是这部分内存。</p>
+<h3 id="对象已死吗"><a href="#对象已死吗" class="headerlink" title="对象已死吗"></a>对象已死吗</h3><p>在堆里面存放着Java 世界中几乎所有的对象实例，垃圾收集器在对堆进行回收前，第一件事情就是要确定这些对象之中哪些还存活着，哪些已经死去(即不可能再被任何途径使用的对象)</p>
+<h4 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h4><p>引用计数算法的就是实现方式就是，给对象添加一个引用计算器，每当有一个地方引用它，计数器值就加1，当引用失效时，计数器减1，任何时间计算器为0的对象，通知GC来回收。</p>
+<p>主流的Java 虚拟机里面没有引用计数器算法来管理内存，其中主要的原因是它很难解决对象之间相互循环引用的问题，举个简单的例子，对象A和B都是字段instance 赋值A.instance=b B.instance=A 除此之外这两个对象再无任何引用。此时就会出现循环引用的问题，导致它们的引用计数都不为0，导致引用计数器算法无法通知GC来回收它们。</p>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h4><p>可达性分析算法的实现方式就是，声明一个GCroot 的起始点，从这些节点开始向下搜索，搜索所走过的路径成为引用链，当一个对象到GC Roots 没有任何引用链，证明此对象不可达，通知GC来回收。</p>
+<h4 id="永久带回收"><a href="#永久带回收" class="headerlink" title="永久带回收"></a>永久带回收</h4><p>在永久带发生处罚GC的概率比较小，一般回收永久带的性价比很低，在堆中，尤其是在新生代中，常规应用进行一次垃圾收集一般可以回收70%-95%的空间，而永久带的垃圾收集效率则很低，永久带一般回收两部分内容，废弃常量和无用的类。<br>永久带回收废弃常量规则：</p>
+<ul>
+<li>没有任何引用对象引用常量池中的常量</li>
+</ul>
+<p>永久带回无用的类规则 ：</p>
+<ul>
+<li>堆中不存在该类的实例</li>
+<li>加载该类的ClassLoader 已经被回收</li>
+<li>该类对应的java.lang.Class 对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法。</li>
+</ul>
+<h3 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h3><ul>
+<li>标记-清除算法</li>
+<li>复制算法</li>
+<li>标记整理算法</li>
+<li>分代收集算法</li>
+</ul>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><h4 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h4><p>串行单线程的收集器，它进行垃圾收集时，必须暂停其它所有的工作线程直到它收集结束。它优于其它收集器的地方就是它简单而且高效，对于限定单个cpu环境来说，Serial收集器由于没有线程交互的开销。Serial 收集器对于运行在Client 模式下的虚拟机来说是一个很好的选择。</p>
+<h4 id="Parnew收集器"><a href="#Parnew收集器" class="headerlink" title="Parnew收集器"></a>Parnew收集器</h4><p>ParNew收集器其实就是Serial 收集器的多线程版本，CPU越多的情况下 性能会越好，但是由于存在线程交互的问题相应的开销也好增加</p>
+<h4 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h4><p>Parallel Scavenge 是一个新生代的收集器，也是使用复制算法的收集器，它的主要关注点是尽可能的缩短垃圾收集时用户线程的停顿时间。</p>
+<ul>
+<li>MaxGCPauseMillis GC 暂停时间</li>
+<li>GCTimeRatio 垃圾收集时间的占总时间比率</li>
+</ul>
+<h4 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h4><p>Serial收集器的老年版本。</p>
+<h4 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h4><p>Parallel收集器的老年版本，在注重吞吐量以及CPU资源敏感的场合都可以优先考虑Parallel Scavenge+Parallel Old 收集器。</p>
+<h4 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h4><p>CMS(Concurrent Mark Sweep) 收集器是一种以获取最短回收停顿时间为目标的收集器， CMS收集器是基于 ：标记-清除 算法实现的，它的运作过程相对于前面几种收集器来说更复杂一些，整个过程为4个步骤</p>
+<ul>
+<li>初始标记 标记GC Root能直接关联到的对象</li>
+<li>并发标记 进行 GC Roots Tracing 的过程</li>
+<li>重新标记 为了修正并发标记期间因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录</li>
+<li>并发清除 清除对象</li>
+</ul>
+<h3 id="虚拟机内存分配策略"><a href="#虚拟机内存分配策略" class="headerlink" title="虚拟机内存分配策略"></a>虚拟机内存分配策略</h3><p>Java 技术体系中所提倡的自动内存管理最终可以归结为自动化解决了两个问题</p>
+<ul>
+<li>给对象分配内存</li>
+<li>回收分配给对象的内存</li>
+</ul>
+<h4 id="对象优先在eden分配"><a href="#对象优先在eden分配" class="headerlink" title="对象优先在eden分配"></a>对象优先在eden分配</h4><p>大多数情况下，对象在新生代Eden区中分配，当Eden区没有足够空间进行分配时，虚拟机将发起一次Minor GC。</p>
+<h4 id="大对象直接进入老年代"><a href="#大对象直接进入老年代" class="headerlink" title="大对象直接进入老年代"></a>大对象直接进入老年代</h4><p>所谓的大对象是指需要大量连续内存空间的Java 对象，最典型的大对象就是那种很长的字符串已经数组，大对象对虚拟机的内存分配来说就是一个坏消息，还有比这更换的消息就是遇到一群朝生夕灭的短命大对象，这两种情况在写程序时应当尽量避免。</p>
+<h4 id="长期存活的对象将进入老年代"><a href="#长期存活的对象将进入老年代" class="headerlink" title="长期存活的对象将进入老年代"></a>长期存活的对象将进入老年代</h4><p>虚拟机采用了分代手机的思想来管理内存，那么内存回收时就能识别哪些对象应放在新生代，哪些对象应放在老年代。为了做到这点，虚拟机给每个对象定义了一个对象年龄计数器，如果对象在Eden出生并经过第一次Minor GC 后仍然存活，并且能被Survivor容纳的话，将被移动到Suivivor空间中，并且对象年龄设为1 。 对象在Survivor 区中每熬过一次 Minor GC 年龄就增加 1岁，当它年龄增加到一定程度就会被晋升到老年代中。</p>
+<h4 id="动态对象年龄判定"><a href="#动态对象年龄判定" class="headerlink" title="动态对象年龄判定"></a>动态对象年龄判定</h4><p>为了能更好的适应不同程序的内存情况，虚拟机并不是永远要求对象的年龄必须达到MaxTenuringThreshold才能晋升老年代，如果在Suivivor 空间中相同年龄所以对象大小的综合大于Survivor 空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代，无须等到MaxTenuringThreshold中要求的年龄。</p>
+<h4 id="空间分配担保"><a href="#空间分配担保" class="headerlink" title="空间分配担保"></a>空间分配担保</h4><p>在发送Minor GC之前，虚拟机会先检查老年代最大可用的连续空间是否大于新生代所有对象总空间，如果这个条件成立，那么Minor GC可以确保是安全的。新生代采用复制收集算法，但为了内存利用率，只使用其中一个Survivor空间作为轮回备份，因此当出现大量对象在Minor GC 后仍然存活的情况。就需要老年代进行分配，把Survivor 无法容纳的对象直接进入老年代。当然前提是老年代本身还有容纳这些对象的剩余空间，一共有多少对象会活下来在实际完成内存回收之前是无法明确知道的，所以只好取之前每次回收晋升到老年代对象容量的评价大小值作为经验值，与剩余空间进行比较、</p>
+<h3 id="垃圾收集器与内存分配策略总结"><a href="#垃圾收集器与内存分配策略总结" class="headerlink" title="垃圾收集器与内存分配策略总结"></a>垃圾收集器与内存分配策略总结</h3><p>内存回收与老垃圾收集器在很多时候都是影响性能，并发能力的主要因素之一，虚拟机之所以提供多种不同的收集器以及提供大量的调节参数，是因为只有根据实际应用需求，实现方式选择最优的收集方式才能获取最高的性能，没有固定收集器，参数组合，也没有最优的调优方法，虚拟机也就没有必然的内存回收行为。</p>
+<p>####本文为笔者 读深入理解Java虚拟机JVM高级特性与最佳实践的读书笔记和笔者自己的理解，如果大家想更深入的了解，建议大家去阅读此书。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
