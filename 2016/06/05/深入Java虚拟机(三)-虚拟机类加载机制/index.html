@@ -10,6 +10,8 @@
 
     <!--Description-->
     
+        <meta name="description" content="垃圾收集器与内存分配策略本文为笔者 读深入理解Java虚拟机JVM高级特性与最佳实践的读书笔记和笔者自己的理解，如果大家想更深入的了解，建议大家去阅读此书。">
+    
 
     <!--Author-->
     
@@ -18,7 +20,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Android Niffler"/>
+        <meta property="og:title" content="深入Java虚拟机(三)"/>
     
 
     <!--Open Graph Description-->
@@ -29,7 +31,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
     
 
     <!--Page Cover-->
@@ -40,7 +42,7 @@
 
     <!-- Title -->
     
-    <title>归档：2016/6 - Android Niffler</title>
+    <title>深入Java虚拟机(三) - Android Niffler</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -134,76 +136,84 @@
 </nav>
 
     <!-- Main Content -->
-    
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
 
-<!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
 <header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>2016/6</h1>
+                <div class="post-heading">
+                    <h1>深入Java虚拟机(三)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-06-05
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java虚拟机/">#Java虚拟机</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
             
-                <div class="post-preview">
-    <a href="/2016/06/15/How Android Draws Views(译)/">
-        <h1 class="post-title archive">
-            How Android Draws Views(译)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-06-15
-    </p>
-</div>
+
+            <!-- Gallery -->
             
-                <div class="post-preview">
-    <a href="/2016/06/05/深入Java虚拟机(三)-虚拟机类加载机制/">
-        <h1 class="post-title archive">
-            深入Java虚拟机(三)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-06-05
-    </p>
-</div>
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="垃圾收集器与内存分配策略"><a href="#垃圾收集器与内存分配策略" class="headerlink" title="垃圾收集器与内存分配策略"></a>垃圾收集器与内存分配策略</h3><h4 id="本文为笔者-读深入理解Java虚拟机JVM高级特性与最佳实践的读书笔记和笔者自己的理解，如果大家想更深入的了解，建议大家去阅读此书。"><a href="#本文为笔者-读深入理解Java虚拟机JVM高级特性与最佳实践的读书笔记和笔者自己的理解，如果大家想更深入的了解，建议大家去阅读此书。" class="headerlink" title="本文为笔者 读深入理解Java虚拟机JVM高级特性与最佳实践的读书笔记和笔者自己的理解，如果大家想更深入的了解，建议大家去阅读此书。"></a>本文为笔者 读深入理解Java虚拟机JVM高级特性与最佳实践的读书笔记和笔者自己的理解，如果大家想更深入的了解，建议大家去阅读此书。</h4>
+
+                
+            </div>
+
+            <!-- Comments -->
             
-                <div class="post-preview">
-    <a href="/2016/06/02/深入Java虚拟机(二)-垃圾收集器与内存分配策略/">
-        <h1 class="post-title archive">
-            深入Java虚拟机(二)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-06-02
-    </p>
-</div>
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
             
-            <div class="archive-before-pagination"></div>
-            <ul class="pager">
-    
-    
-</ul>
         </div>
     </div>
-</div>
-
-
+</article>
 
     <!-- Footer -->
     <hr />
