@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="简述同一程序中的两个函数之间能直接调用的根本原因就是出于相同的内存空间中，反之两个不同进程的两个函数或者对象 它们是没有办法通过内存地址访问到对方内部的函数或者变量的。既然没有直接访问的方法那就只能通过间接的方式来访问了。Binder就是让两个函数或者对象能够跨进程内存来就是访问的一种实现机制。
+B">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="进程间通信Binder"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>进程间通信Binder - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>进程间通信Binder</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-03-23
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h3><p>同一程序中的两个函数之间能直接调用的根本原因就是出于相同的内存空间中，反之两个不同进程的两个函数或者对象 它们是没有办法通过内存地址访问到对方内部的函数或者变量的。既然没有直接访问的方法那就只能通过间接的方式来访问了。<em>Binder就是让两个函数或者对象能够跨进程内存来就是访问的一种实现机制。</em></p>
+<p>Binder是由以下几个元素组成的</p>
+<ul>
+<li>Binder 驱动 -——&gt;类似于路由器</li>
+<li>Service Manager -——&gt;DNS 跳转和分发</li>
+<li>Binder Client -——&gt;客户端发送请求服务</li>
+<li>Binder Server -——&gt;服务器处理请求相应请求</li>
+</ul>
+<h3 id="传递载体Parcel"><a href="#传递载体Parcel" class="headerlink" title="传递载体Parcel"></a>传递载体Parcel</h3><p>同一进程内通信，A调用B,其实调用的B的一个引用，下次C 再调用B 其实也是调用B的一个引用，B 永远只初始化一次，究其本质是因为同进程内通信是传递了一个内存地址。但是不同进程间的调用，就是没法调用引用了，因为进程间的引用是封闭的，那Bindle是如何实现跨进程的通信了，这个时候就需要Parcel 了，binder 机制为了实现 不同进程内的 A 调用 B 就通过把B中占据内存的相关数据通过<em>Parcel</em> 打包起来，然后传送给 A （类似复制的方法），这样B 和A 就在同一进程里面了，这个时候A 再调用B 就没有任何障碍了。</p>
+<p>Parcel 是一种能够把传输的数据进行打包和重组的数据载体，用于承载希望通过IBinder 发送的相关信息（包括数据和对象引用）。正是基于Parcel 这种跨数据传输数据的能力，进程间的IPC 通信才能更加平滑可靠。</p>
+<h3 id="Binder驱动与协议"><a href="#Binder驱动与协议" class="headerlink" title="Binder驱动与协议"></a>Binder驱动与协议</h3><h3 id="ServiceManager"><a href="#ServiceManager" class="headerlink" title="ServiceManager"></a>ServiceManager</h3><ul>
+<li>ServiceManager 的启动和构建</li>
+<li>ServiceManager 的构建</li>
+<li>获取ServiceManager </li>
+<li>ServiceManagerProxy 使用ServiceManager</li>
+</ul>
+<h4 id="ServiceManager-的启动和构建"><a href="#ServiceManager-的启动和构建" class="headerlink" title="ServiceManager 的启动和构建"></a>ServiceManager 的启动和构建</h4><p>ServiceManager在用户使用Binder 机制前就处于正常的工作状态，ServiceManager本身也同样是Binder Server（在Android系统中，BinderServer的另一个常见的称谓是“XX Service”，如Media Service），ServiceManager 必须是第一个向Binder 驱动注册成管家的程序。 所有准备工作已经就绪，SM 可以开始等待客户端的请求，SM 开始等待请求的核心思想和典型的基于事件驱动的程序循环框架类型。</p>
+<ul>
+<li>从binder驱动读取消息（从消息列表中读取消息）</li>
+<li>处理消息 调用binder_parse来解析消息，（如果消息是退出命令，则马上结束循环，如果消息为空，则继续读取或等待一段时间后再读取，如果消息不为空且不说退出命令，则根据具体情况进行处理。）,在ServiceManager 的源码里面通过调用<em>BR_TRANSACTION</em> ，然后将结果返回给Binder驱动，因为SM是为了完成“Binder Server Name” 和“Server Handle ”间 对应关系的查询而存在的，</li>
+<li>不断循环，而且永远不会主动退出（如此循环往复直到退出）</li>
+</ul>
+<p>ServiceManager的功能架构比较简洁，其内部维护着一个svclist列表，用于存储所有Server相关信息，查询和注册都是基于这个表展开，ServiceManager主要提供了一下几种服务</p>
+<ul>
+<li>注册 当一个Binder Server 创建后，它们将自己的对应关系告知SM 进程备案。</li>
+<li>查询 应用程序可以向SM 发起查询请求，以获知某个Binder Server 所对应的句柄。</li>
+<li>其它信息查询 比如SM 版本号，当前状态等。</li>
+</ul>
+<h4 id="获取和使用ServiceManager"><a href="#获取和使用ServiceManager" class="headerlink" title="获取和使用ServiceManager"></a>获取和使用ServiceManager</h4><p>获取SM服务是Binder Client 需要做的工作之一，不过SM 是Binder Server 中的典型范例。如果要访问SM (Binder Server)的服务主要是以下几步</p>
+<ul>
+<li>打开Binder 设备</li>
+<li>执行mmap</li>
+<li>通过Binder 驱动向SM 发送请求</li>
+<li>获取结果</li>
+</ul>
+<p>ServiceManager服务提供了便利的实现，其中的核心是ServiceManagerProxy，其外围又包装了ServiceManager.java 和ServiceManagerNative，在创建时传入了一个Ibinder 对象 ，然后借助它的tracsact方法，可以方便的与Binder 驱动进行通信。IBinder只是一个接口类，显然还有具体的实现类继承于它，在Native 层这就是BpBinder(BpBinder.cpp);而在Java层，则是Binder.java 中的BinderProxy。事实上，ProcessState::self()-&gt;getContextObject(NULL)返回就是一个BpBinder对象。<br>调用流程是：</p>
+<ul>
+<li>getService@ServiceManagerProxy-&gt;transact@BinderProxy-&gt;transact@BpBbinder-&gt;transcat@IPCThreadState</li>
+</ul>
+<p>Binder 的执行过程多数是阻塞型的或者说是同步操作 换句话说通过Binder去调用服务进程提供的接口函数，那么此函数执行结束时结果就已经产生，不涉及回调机制，比如用户使用getService向ServiceManager发起查询请求，函数的返回值就是查询的结果，意味着用户不需要通过额外的回调函数来接收结果，Binder 主要是通过让调用者进程暂时挂起，直到目标进程返回结果后，Binder再唤醒等待的进程。</p>
+<p>ServiceManager 在Android 系统启动之后 就运行起来了。并通过BINDER_SET_CONTEXT_MGR 把自己注册成Binder “大管家”，它在做完一系列初始化后，在最后一次ioctl的read 操作中会进入睡眠等待，直到有Binder Client 发起服务请求而被Binder驱动唤醒。<br>Service Manager 唤醒后程序分为两条主线索。</p>
+<ul>
+<li><ol>
+<li>Service Manager 端将接着执行read 操作，把调用者具体请求读出来，然后利用binder_parse解析，再根据实际情况填写transaction信息，最后把结果通过BR_REPLY命令 返回Binder驱动</li>
+</ol>
+</li>
+<li><ol>
+<li>其二发起getService 请求的Binder Client 在等待SM 回复过程中会进入休眠状态，直到被Binder 驱动再次唤醒，它和SM 一样也在read中睡眠的，因而醒来后继续执行读取操作，这一次得到的就是Service Manager 对请求的执行结果。程序会把结果填充到Parcel中，然后返回给 ServiceManagerProxy，再利用Parcel.readStrongBinder生成一个BpBinder ，经过类型转换后将IBinder 传给调用者。</li>
+</ol>
+<p><img src="http://oneball.oss-cn-shanghai.aliyuncs.com/aaaa.png" alt="CSDN图标" title="SM调用流程图"></p>
+</li>
+</ul>
+<h3 id="Binder-Client"><a href="#Binder-Client" class="headerlink" title="Binder Client"></a>Binder Client</h3><h3 id="Adroid-接口描述语言-AIDL"><a href="#Adroid-接口描述语言-AIDL" class="headerlink" title="Adroid 接口描述语言-AIDL"></a>Adroid 接口描述语言-AIDL</h3><h3 id="Binder-Server"><a href="#Binder-Server" class="headerlink" title="Binder Server"></a>Binder Server</h3>
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
