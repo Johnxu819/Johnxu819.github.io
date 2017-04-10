@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="ConcurrentHashMap源码分析
+HashTable 使用synchronized 来保证线程安全，所以在线程竞争激烈的情况下HashTable 的效率非常低下。因为当一个线程访问HashTable的同步方法时。其它线程访问可能会进入阻塞 或者轮询状态。
+HashMap 非线程安全，在多线">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="ConcurrentHashMap源码分析"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>ConcurrentHashMap源码分析 - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>ConcurrentHashMap源码分析</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-04-10
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java/">#Java</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="ConcurrentHashMap源码分析"><a href="#ConcurrentHashMap源码分析" class="headerlink" title="ConcurrentHashMap源码分析"></a>ConcurrentHashMap源码分析</h3><ul>
+<li>HashTable 使用synchronized 来保证线程安全，所以在线程竞争激烈的情况下HashTable 的效率非常低下。因为当一个线程访问HashTable的同步方法时。其它线程访问可能会进入阻塞 或者轮询状态。</li>
+<li>HashMap 非线程安全，在多线程情况下使用put 会引起死循环。</li>
+<li>ConcurrentHashMap 线程安全 ，JDK1.6之前使用了锁分段技术、JDK1.6之后虽然保留了锁分段技术但是却是借助了较多的CAS + synchronized 关键字实现了同步</li>
+</ul>
+<p>HashTable效率低下的主要原因是，所有访问HashTable的线程都必须竞争同一把锁，而ConcurrentHashMap 使用了锁分段的技术，就是对每一个数据都分配一把锁，这样当多线程访问容器时就不会存在竞争激烈的情况，从而有效的提供并发访问的效率。这就是ConcurrentHashMap 的分段锁技术，首先将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个数据段的时候，其它段的数据也能被其它线程访问。如果还停留在分段锁，Segment 那已经out了。jdk1.8之后对ConcurrentHashMap做了进一步的优化主要是以下几点</p>
+<ul>
+<li>CAS 算法</li>
+<li>与Java8的HashMap 有想通之处，底层依然由数组+链表+红黑树</li>
+<li>底层结构存放TreeBin 对象，而不是TreeNode 对象</li>
+</ul>
+<h3 id="ConcurrentHashMap-init"><a href="#ConcurrentHashMap-init" class="headerlink" title="ConcurrentHashMap init"></a>ConcurrentHashMap init</h3><h4 id="ConcurrentHashMap-构造函数"><a href="#ConcurrentHashMap-构造函数" class="headerlink" title="ConcurrentHashMap 构造函数"></a>ConcurrentHashMap 构造函数</h4><pre><code>public ConcurrentHashMap(int initialCapacity) {
+    if (initialCapacity &lt; 0)
+        throw new IllegalArgumentException();
+    int cap = ((initialCapacity &gt;= (MAXIMUM_CAPACITY &gt;&gt;&gt; 1)) ?
+               MAXIMUM_CAPACITY :
+               tableSizeFor(initialCapacity + (initialCapacity &gt;&gt;&gt; 1) + 1));
+    this.sizeCtl = cap;
+}
+</code></pre><hr>
+<pre><code>public ConcurrentHashMap(Map&lt;? extends K, ? extends V&gt; m) {
+    this.sizeCtl = DEFAULT_CAPACITY;
+    putAll(m);
+}
+</code></pre><hr>
+<pre><code>public ConcurrentHashMap(int initialCapacity, float loadFactor) {
+    this(initialCapacity, loadFactor, 1);
+}
+</code></pre><hr>
+<pre><code>public ConcurrentHashMap(int initialCapacity,
+                         float loadFactor, int concurrencyLevel) {
+    if (!(loadFactor &gt; 0.0f) || initialCapacity &lt; 0 || concurrencyLevel &lt;= 0)
+        throw new IllegalArgumentException();
+    if (initialCapacity &lt; concurrencyLevel)   // Use at least as many bins
+        initialCapacity = concurrencyLevel;   // as estimated threads
+    long size = (long)(1.0 + (long)initialCapacity / loadFactor);
+    int cap = (size &gt;= (long)MAXIMUM_CAPACITY) ?
+        MAXIMUM_CAPACITY : tableSizeFor((int)size);
+    this.sizeCtl = cap;
+}
+</code></pre><p>上面的构造函数主要干了两件事：</p>
+<ul>
+<li>1、参数的有效性检查</li>
+<li>2、table初始化的长度(如果不指定默认情况下为16)。</li>
+</ul>
+<p>这里要说一个参数：concurrencyLevel，表示能够同时更新ConccurentHashMap且不产生锁竞争的最大线程数。默认值为16，(即允许16个线程并发可能不会产生竞争)。为了保证并发的性能，我们要很好的估计出concurrencyLevel值，不然要么竞争相当厉害，从而导致线程试图写入当前锁定的段时阻塞。</p>
+<h4 id="ConcurrentHashMap类中相关节点类：Node-TreeNode-TreeBin"><a href="#ConcurrentHashMap类中相关节点类：Node-TreeNode-TreeBin" class="headerlink" title="ConcurrentHashMap类中相关节点类：Node/TreeNode/TreeBin"></a>ConcurrentHashMap类中相关节点类：Node/TreeNode/TreeBin</h4><h5 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h5><pre><code>static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
+    final int hash;
+    final K key;
+    volatile V val;
+    volatile Node&lt;K,V&gt; next;
+
+    Node(int hash, K key, V val, Node&lt;K,V&gt; next) {
+        this.hash = hash;
+        this.key = key;
+        this.val = val;
+        this.next = next;
+    }
+
+    public final K getKey()       { return key; }
+    public final V getValue()     { return val; }
+    public final int hashCode()   { return key.hashCode() ^ val.hashCode(); }
+    public final String toString(){ return key + &quot;=&quot; + val; }
+    public final V setValue(V value) {
+        throw new UnsupportedOperationException();
+    }
+
+    public final boolean equals(Object o) {
+        Object k, v, u; Map.Entry&lt;?,?&gt; e;
+        return ((o instanceof Map.Entry) &amp;&amp;
+                (k = (e = (Map.Entry&lt;?,?&gt;)o).getKey()) != null &amp;&amp;
+                (v = e.getValue()) != null &amp;&amp;
+                (k == key || k.equals(key)) &amp;&amp;
+                (v == (u = val) || v.equals(u)));
+    }
+
+    /**
+     * 遍历树节点
+     */
+    Node&lt;K,V&gt; find(int h, Object k) {
+        Node&lt;K,V&gt; e = this;
+        if (k != null) {
+            do {
+                K ek;
+                if (e.hash == h &amp;&amp;
+                    ((ek = e.key) == k || (ek != null &amp;&amp; k.equals(ek))))
+                    return e;
+            } while ((e = e.next) != null);
+        }
+        return null;
+    }
+}
+</code></pre><h5 id="TreeNode"><a href="#TreeNode" class="headerlink" title="TreeNode"></a>TreeNode</h5><p> Nodes for use in TreeBins，链表&gt;8，才可能转为TreeNode.<br> HashMap的TreeNode继承至LinkedHashMap.Entry；而这里继承至自己实现的Node，将带有next指针，便于treebin访问。</p>
+<pre><code>static final class TreeNode&lt;K,V&gt; extends Node&lt;K,V&gt; {
+    TreeNode&lt;K,V&gt; parent;  // red-black tree links
+    TreeNode&lt;K,V&gt; left;
+    TreeNode&lt;K,V&gt; right;
+    TreeNode&lt;K,V&gt; prev;    // needed to unlink next upon deletion
+    boolean red;
+
+    TreeNode(int hash, K key, V val, Node&lt;K,V&gt; next,
+             TreeNode&lt;K,V&gt; parent) {
+        super(hash, key, val, next);
+        this.parent = parent;
+    }
+
+    Node&lt;K,V&gt; find(int h, Object k) {
+        return findTreeNode(h, k, null);
+    }
+
+    /**
+     * Returns the TreeNode (or null if not found) for the given key
+     * starting at given root.
+     */
+    final TreeNode&lt;K,V&gt; findTreeNode(int h, Object k, Class&lt;?&gt; kc) {
+        if (k != null) {
+            TreeNode&lt;K,V&gt; p = this;
+            do  {
+                int ph, dir; K pk; TreeNode&lt;K,V&gt; q;
+                TreeNode&lt;K,V&gt; pl = p.left, pr = p.right;
+                if ((ph = p.hash) &gt; h)
+                    p = pl;
+                else if (ph &lt; h)
+                    p = pr;
+                else if ((pk = p.key) == k || (pk != null &amp;&amp; k.equals(pk)))
+                    return p;
+                else if (pl == null)
+                    p = pr;
+                else if (pr == null)
+                    p = pl;
+                else if ((kc != null ||
+                          (kc = comparableClassFor(k)) != null) &amp;&amp;
+                         (dir = compareComparables(kc, k, pk)) != 0)
+                    p = (dir &lt; 0) ? pl : pr;
+                else if ((q = pr.findTreeNode(h, k, kc)) != null)
+                    return q;
+                else
+                    p = pl;
+            } while (p != null);
+        }
+        return null;
+    }
+}
+</code></pre><p>// 和HashMap相比，这里的TreeNode相当简洁；ConcurrentHashMap链表转树时，并不会直接转，正如注释（Nodes for use in TreeBins）所说，只是把这些节点包装成TreeNode放到TreeBin中，再由TreeBin来转化红黑树。</p>
+<h5 id="TreeBin"><a href="#TreeBin" class="headerlink" title="TreeBin"></a>TreeBin</h5><p> TreeBin用于封装维护TreeNode，包含putTreeVal、lookRoot、UNlookRoot、remove、balanceInsetion、balanceDeletion等方法，这里只分析其构造函数。</p>
+<p> 当链表转树时，用于封装TreeNode，也就是说，ConcurrentHashMap的红黑树存放的时TreeBin，而不是treeNode。</p>
+<pre><code>static final class TreeBin&lt;K,V&gt; extends Node&lt;K,V&gt; {
+    TreeNode&lt;K,V&gt; root;
+    volatile TreeNode&lt;K,V&gt; first;
+    volatile Thread waiter;
+    volatile int lockState;
+    // values for lockState
+    static final int WRITER = 1; // set while holding write lock
+    static final int WAITER = 2; // set when waiting for write lock
+    static final int READER = 4; // increment value for setting read lock
+
+    /**
+     * Tie-breaking utility for ordering insertions when equal
+     * hashCodes and non-comparable. We don&apos;t require a total
+     * order, just a consistent insertion rule to maintain
+     * equivalence across rebalancings. Tie-breaking further than
+     * necessary simplifies testing a bit.
+     */
+    static int tieBreakOrder(Object a, Object b) {
+        int d;
+        if (a == null || b == null ||
+            (d = a.getClass().getName().
+             compareTo(b.getClass().getName())) == 0)
+            d = (System.identityHashCode(a) &lt;= System.identityHashCode(b) ?
+                 -1 : 1);
+        return d;
+    }
+
+    /**
+     * Creates bin with initial set of nodes headed by b.
+     */
+    TreeBin(TreeNode&lt;K,V&gt; b) {
+        super(TREEBIN, null, null, null);
+        this.first = b;
+        TreeNode&lt;K,V&gt; r = null;
+        for (TreeNode&lt;K,V&gt; x = b, next; x != null; x = next) {
+            next = (TreeNode&lt;K,V&gt;)x.next;
+            x.left = x.right = null;
+            if (r == null) {
+                x.parent = null;
+                x.red = false;
+                r = x;
+            }
+            else {
+                K k = x.key;
+                int h = x.hash;
+                Class&lt;?&gt; kc = null;
+                for (TreeNode&lt;K,V&gt; p = r;;) {
+                    int dir, ph;
+                    K pk = p.key;
+                    if ((ph = p.hash) &gt; h)
+                        dir = -1;
+                    else if (ph &lt; h)
+                        dir = 1;
+                    else if ((kc == null &amp;&amp;
+                              (kc = comparableClassFor(k)) == null) ||
+                             (dir = compareComparables(kc, k, pk)) == 0)
+                        dir = tieBreakOrder(k, pk);
+                        TreeNode&lt;K,V&gt; xp = p;
+                    if ((p = (dir &lt;= 0) ? p.left : p.right) == null) {
+                        x.parent = xp;
+                        if (dir &lt;= 0)
+                            xp.left = x;
+                        else
+                            xp.right = x;
+                        r = balanceInsertion(r, x);
+                        break;
+                    }
+                }
+            }
+        }
+        this.root = r;
+        assert checkInvariants(root);
+    }
+
+    /**
+     * Acquires write lock for tree restructuring.
+     */
+    private final void lockRoot() {
+        if (!U.compareAndSwapInt(this, LOCKSTATE, 0, WRITER))
+            contendedLock(); // offload to separate method
+    }
+
+    /**
+     * Releases write lock for tree restructuring.
+     */
+    private final void unlockRoot() {
+        lockState = 0;
+    }
+
+    /**
+     * Possibly blocks awaiting root lock.
+     */
+    private final void contendedLock() {
+        boolean waiting = false;
+        for (int s;;) {
+            if (((s = lockState) &amp; ~WAITER) == 0) {
+                if (U.compareAndSwapInt(this, LOCKSTATE, s, WRITER)) {
+                    if (waiting)
+                        waiter = null;
+                    return;
+                }
+            }
+            else if ((s &amp; WAITER) == 0) {
+                if (U.compareAndSwapInt(this, LOCKSTATE, s, s | WAITER)) {
+                    waiting = true;
+                    waiter = Thread.currentThread();
+                }
+            }
+            else if (waiting)
+                LockSupport.park(this);
+        }
+    }
+
+    /**
+     * Returns matching node or null if none. Tries to search
+     * using tree comparisons from root, but continues linear
+     * search when lock not available.
+     */
+    final Node&lt;K,V&gt; find(int h, Object k) {
+        if (k != null) {
+            for (Node&lt;K,V&gt; e = first; e != null; ) {
+                int s; K ek;
+                if (((s = lockState) &amp; (WAITER|WRITER)) != 0) {
+                    if (e.hash == h &amp;&amp;
+                        ((ek = e.key) == k || (ek != null &amp;&amp; k.equals(ek))))
+                        return e;
+                    e = e.next;
+                }
+                else if (U.compareAndSwapInt(this, LOCKSTATE, s,
+                                             s + READER)) {
+                    TreeNode&lt;K,V&gt; r, p;
+                    try {
+                        p = ((r = root) == null ? null :
+                             r.findTreeNode(h, k, null));
+                    } finally {
+                        Thread w;
+                        if (U.getAndAddInt(this, LOCKSTATE, -READER) ==
+                            (READER|WAITER) &amp;&amp; (w = waiter) != null)
+                            LockSupport.unpark(w);
+                    }
+                    return p;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds or adds a node.
+     * @return null if added
+     */
+    final TreeNode&lt;K,V&gt; putTreeVal(int h, K k, V v) {
+        Class&lt;?&gt; kc = null;
+        boolean searched = false;
+        for (TreeNode&lt;K,V&gt; p = root;;) {
+            int dir, ph; K pk;
+            if (p == null) {
+                first = root = new TreeNode&lt;K,V&gt;(h, k, v, null, null);
+                break;
+            }
+            else if ((ph = p.hash) &gt; h)
+                dir = -1;
+            else if (ph &lt; h)
+                dir = 1;
+            else if ((pk = p.key) == k || (pk != null &amp;&amp; k.equals(pk)))
+                return p;
+            else if ((kc == null &amp;&amp;
+                      (kc = comparableClassFor(k)) == null) ||
+                     (dir = compareComparables(kc, k, pk)) == 0) {
+                if (!searched) {
+                    TreeNode&lt;K,V&gt; q, ch;
+                    searched = true;
+                    if (((ch = p.left) != null &amp;&amp;
+                         (q = ch.findTreeNode(h, k, kc)) != null) ||
+                        ((ch = p.right) != null &amp;&amp;
+                         (q = ch.findTreeNode(h, k, kc)) != null))
+                        return q;
+                }
+                dir = tieBreakOrder(k, pk);
+            }
+
+            TreeNode&lt;K,V&gt; xp = p;
+            if ((p = (dir &lt;= 0) ? p.left : p.right) == null) {
+                TreeNode&lt;K,V&gt; x, f = first;
+                first = x = new TreeNode&lt;K,V&gt;(h, k, v, f, xp);
+                if (f != null)
+                    f.prev = x;
+                if (dir &lt;= 0)
+                    xp.left = x;
+                else
+                    xp.right = x;
+                if (!xp.red)
+                    x.red = true;
+                else {
+                    lockRoot();
+                    try {
+                        root = balanceInsertion(root, x);
+                    } finally {
+                        unlockRoot();
+                    }
+                }
+                break;
+            }
+        }
+        assert checkInvariants(root);
+        return null;
+    }
+
+    /**
+     * Removes the given node, that must be present before this
+     * call.  This is messier than typical red-black deletion code
+     * because we cannot swap the contents of an interior node
+     * with a leaf successor that is pinned by &quot;next&quot; pointers
+     * that are accessible independently of lock. So instead we
+     * swap the tree linkages.
+     *
+     * @return true if now too small, so should be untreeified
+     */
+    final boolean removeTreeNode(TreeNode&lt;K,V&gt; p) {
+        TreeNode&lt;K,V&gt; next = (TreeNode&lt;K,V&gt;)p.next;
+        TreeNode&lt;K,V&gt; pred = p.prev;  // unlink traversal pointers
+        TreeNode&lt;K,V&gt; r, rl;
+        if (pred == null)
+            first = next;
+        else
+            pred.next = next;
+        if (next != null)
+            next.prev = pred;
+        if (first == null) {
+            root = null;
+            return true;
+        }
+        if ((r = root) == null || r.right == null || // too small
+            (rl = r.left) == null || rl.left == null)
+            return true;
+        lockRoot();
+        try {
+            TreeNode&lt;K,V&gt; replacement;
+            TreeNode&lt;K,V&gt; pl = p.left;
+            TreeNode&lt;K,V&gt; pr = p.right;
+            if (pl != null &amp;&amp; pr != null) {
+                TreeNode&lt;K,V&gt; s = pr, sl;
+                while ((sl = s.left) != null) // find successor
+                    s = sl;
+                boolean c = s.red; s.red = p.red; p.red = c; // swap colors
+                TreeNode&lt;K,V&gt; sr = s.right;
+                TreeNode&lt;K,V&gt; pp = p.parent;
+                if (s == pr) { // p was s&apos;s direct parent
+                    p.parent = s;
+                    s.right = p;
+                }
+                else {
+                    TreeNode&lt;K,V&gt; sp = s.parent;
+                    if ((p.parent = sp) != null) {
+                        if (s == sp.left)
+                            sp.left = p;
+                        else
+                            sp.right = p;
+                    }
+                    if ((s.right = pr) != null)
+                        pr.parent = s;
+                }
+                p.left = null;
+                if ((p.right = sr) != null)
+                    sr.parent = p;
+                if ((s.left = pl) != null)
+                    pl.parent = s;
+                if ((s.parent = pp) == null)
+                    r = s;
+                else if (p == pp.left)
+                    pp.left = s;
+                else
+                    pp.right = s;
+                if (sr != null)
+                    replacement = sr;
+                else
+                    replacement = p;
+            }
+            else if (pl != null)
+                replacement = pl;
+            else if (pr != null)
+                replacement = pr;
+            else
+                replacement = p;
+            if (replacement != p) {
+                TreeNode&lt;K,V&gt; pp = replacement.parent = p.parent;
+                if (pp == null)
+                    r = replacement;
+                else if (p == pp.left)
+                    pp.left = replacement;
+                else
+                    pp.right = replacement;
+                p.left = p.right = p.parent = null;
+            }
+
+            root = (p.red) ? r : balanceDeletion(r, replacement);
+
+            if (p == replacement) {  // detach pointers
+                TreeNode&lt;K,V&gt; pp;
+                if ((pp = p.parent) != null) {
+                    if (p == pp.left)
+                        pp.left = null;
+                    else if (p == pp.right)
+                        pp.right = null;
+                    p.parent = null;
+                }
+            }
+        } finally {
+            unlockRoot();
+        }
+        assert checkInvariants(root);
+        return false;
+    }
+
+    /* ------------------------------------------------------------ */
+    // Red-black tree methods, all adapted from CLR
+
+    static &lt;K,V&gt; TreeNode&lt;K,V&gt; rotateLeft(TreeNode&lt;K,V&gt; root,
+                                          TreeNode&lt;K,V&gt; p) {
+        TreeNode&lt;K,V&gt; r, pp, rl;
+        if (p != null &amp;&amp; (r = p.right) != null) {
+            if ((rl = p.right = r.left) != null)
+                rl.parent = p;
+            if ((pp = r.parent = p.parent) == null)
+                (root = r).red = false;
+            else if (pp.left == p)
+                pp.left = r;
+            else
+                pp.right = r;
+            r.left = p;
+            p.parent = r;
+        }
+        return root;
+    }
+
+    static &lt;K,V&gt; TreeNode&lt;K,V&gt; rotateRight(TreeNode&lt;K,V&gt; root,
+                                           TreeNode&lt;K,V&gt; p) {
+        TreeNode&lt;K,V&gt; l, pp, lr;
+        if (p != null &amp;&amp; (l = p.left) != null) {
+            if ((lr = p.left = l.right) != null)
+                lr.parent = p;
+            if ((pp = l.parent = p.parent) == null)
+                (root = l).red = false;
+            else if (pp.right == p)
+                pp.right = l;
+            else
+                pp.left = l;
+            l.right = p;
+            p.parent = l;
+        }
+        return root;
+    }
+
+    static &lt;K,V&gt; TreeNode&lt;K,V&gt; balanceInsertion(TreeNode&lt;K,V&gt; root,
+                                                TreeNode&lt;K,V&gt; x) {
+        x.red = true;
+        for (TreeNode&lt;K,V&gt; xp, xpp, xppl, xppr;;) {
+            if ((xp = x.parent) == null) {
+                x.red = false;
+                return x;
+            }
+            else if (!xp.red || (xpp = xp.parent) == null)
+                return root;
+            if (xp == (xppl = xpp.left)) {
+                if ((xppr = xpp.right) != null &amp;&amp; xppr.red) {
+                    xppr.red = false;
+                    xp.red = false;
+                    xpp.red = true;
+                    x = xpp;
+                }
+                else {
+                    if (x == xp.right) {
+                        root = rotateLeft(root, x = xp);
+                        xpp = (xp = x.parent) == null ? null : xp.parent;
+                    }
+                    if (xp != null) {
+                        xp.red = false;
+                        if (xpp != null) {
+                            xpp.red = true;
+                            root = rotateRight(root, xpp);
+                        }
+                    }
+                }
+            }
+            else {
+                if (xppl != null &amp;&amp; xppl.red) {
+                    xppl.red = false;
+                    xp.red = false;
+                    xpp.red = true;
+                    x = xpp;
+                }
+                else {
+                    if (x == xp.left) {
+                        root = rotateRight(root, x = xp);
+                        xpp = (xp = x.parent) == null ? null : xp.parent;
+                    }
+                    if (xp != null) {
+                        xp.red = false;
+                        if (xpp != null) {
+                            xpp.red = true;
+                            root = rotateLeft(root, xpp);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    static &lt;K,V&gt; TreeNode&lt;K,V&gt; balanceDeletion(TreeNode&lt;K,V&gt; root,
+                                               TreeNode&lt;K,V&gt; x) {
+        for (TreeNode&lt;K,V&gt; xp, xpl, xpr;;)  {
+            if (x == null || x == root)
+                return root;
+            else if ((xp = x.parent) == null) {
+                x.red = false;
+                return x;
+            }
+            else if (x.red) {
+                x.red = false;
+                return root;
+            }
+            else if ((xpl = xp.left) == x) {
+                if ((xpr = xp.right) != null &amp;&amp; xpr.red) {
+                    xpr.red = false;
+                    xp.red = true;
+                    root = rotateLeft(root, xp);
+                    xpr = (xp = x.parent) == null ? null : xp.right;
+                }
+                if (xpr == null)
+                    x = xp;
+                else {
+                    TreeNode&lt;K,V&gt; sl = xpr.left, sr = xpr.right;
+                    if ((sr == null || !sr.red) &amp;&amp;
+                        (sl == null || !sl.red)) {
+                        xpr.red = true;
+                        x = xp;
+                    }
+                    else {
+                        if (sr == null || !sr.red) {
+                            if (sl != null)
+                                sl.red = false;
+                            xpr.red = true;
+                            root = rotateRight(root, xpr);
+                            xpr = (xp = x.parent) == null ?
+                                null : xp.right;
+                        }
+                        if (xpr != null) {
+                            xpr.red = (xp == null) ? false : xp.red;
+                            if ((sr = xpr.right) != null)
+                                sr.red = false;
+                        }
+                        if (xp != null) {
+                            xp.red = false;
+                            root = rotateLeft(root, xp);
+                        }
+                        x = root;
+                    }
+                }
+            }
+            else { // symmetric
+                if (xpl != null &amp;&amp; xpl.red) {
+                    xpl.red = false;
+                    xp.red = true;
+                    root = rotateRight(root, xp);
+                    xpl = (xp = x.parent) == null ? null : xp.left;
+                }
+                if (xpl == null)
+                    x = xp;
+                else {
+                    TreeNode&lt;K,V&gt; sl = xpl.left, sr = xpl.right;
+                    if ((sl == null || !sl.red) &amp;&amp;
+                        (sr == null || !sr.red)) {
+                        xpl.red = true;
+                        x = xp;
+                    }
+                    else {
+                        if (sl == null || !sl.red) {
+                            if (sr != null)
+                                sr.red = false;
+                            xpl.red = true;
+                            root = rotateLeft(root, xpl);
+                            xpl = (xp = x.parent) == null ?
+                                null : xp.left;
+                        }
+                        if (xpl != null) {
+                            xpl.red = (xp == null) ? false : xp.red;
+                            if ((sl = xpl.left) != null)
+                                sl.red = false;
+                        }
+                        if (xp != null) {
+                            xp.red = false;
+                            root = rotateRight(root, xp);
+                        }
+                        x = root;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Recursive invariant check
+     */
+    static &lt;K,V&gt; boolean checkInvariants(TreeNode&lt;K,V&gt; t) {
+        TreeNode&lt;K,V&gt; tp = t.parent, tl = t.left, tr = t.right,
+            tb = t.prev, tn = (TreeNode&lt;K,V&gt;)t.next;
+        if (tb != null &amp;&amp; tb.next != t)
+            return false;
+        if (tn != null &amp;&amp; tn.prev != t)
+            return false;
+        if (tp != null &amp;&amp; t != tp.left &amp;&amp; t != tp.right)
+            return false;
+        if (tl != null &amp;&amp; (tl.parent != t || tl.hash &gt; t.hash))
+            return false;
+        if (tr != null &amp;&amp; (tr.parent != t || tr.hash &lt; t.hash))
+            return false;
+        if (t.red &amp;&amp; tl != null &amp;&amp; tl.red &amp;&amp; tr != null &amp;&amp; tr.red)
+            return false;
+        if (tl != null &amp;&amp; !checkInvariants(tl))
+            return false;
+        if (tr != null &amp;&amp; !checkInvariants(tr))
+            return false;
+        return true;
+    }
+
+    private static final sun.misc.Unsafe U;
+    private static final long LOCKSTATE;
+    static {
+        try {
+            U = sun.misc.Unsafe.getUnsafe();
+            Class&lt;?&gt; k = TreeBin.class;
+            LOCKSTATE = U.objectFieldOffset
+                (k.getDeclaredField(&quot;lockState&quot;));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
+}
+</code></pre><h3 id="ConcurrentHashMap-get"><a href="#ConcurrentHashMap-get" class="headerlink" title="ConcurrentHashMap get"></a>ConcurrentHashMap get</h3><h3 id="ConcurrentHashMap-put"><a href="#ConcurrentHashMap-put" class="headerlink" title="ConcurrentHashMap put"></a>ConcurrentHashMap put</h3><h3 id="ConcurrentHashMap-containsKey-containsValue方法"><a href="#ConcurrentHashMap-containsKey-containsValue方法" class="headerlink" title="ConcurrentHashMap containsKey/containsValue方法"></a>ConcurrentHashMap containsKey/containsValue方法</h3><h3 id="ConcurrentHashMap-clear，remove"><a href="#ConcurrentHashMap-clear，remove" class="headerlink" title="ConcurrentHashMap clear，remove"></a>ConcurrentHashMap clear，remove</h3><h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><p>####<a href="http://www.cnblogs.com/Mainz/p/3546347.html（非阻塞同步算法与CAS(Compare" target="_blank" rel="external">http://www.cnblogs.com/Mainz/p/3546347.html（非阻塞同步算法与CAS(Compare</a> and Swap)无锁算法）</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

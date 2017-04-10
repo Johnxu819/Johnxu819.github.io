@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="#
+#RecyclerView 源码解析
+RecyclerView的相关类图
+LayoutManagerRecyclerView 通过适配器模式把 Measure 和Layout 的过程交给了LayoutManager 去管理。
+LayoutManager 控制着RecyclerView 的onMe">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="RecyclerView 源码解析"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>RecyclerView 源码解析 - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>RecyclerView 源码解析</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-03-25
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>#</p>
+<p>#RecyclerView 源码解析</p>
+<h3 id="RecyclerView的相关类图"><a href="#RecyclerView的相关类图" class="headerlink" title="RecyclerView的相关类图"></a>RecyclerView的相关类图</h3><p><img src="http://oneball-head.oss-cn-shanghai.aliyuncs.com/RecyclerView.png" alt="RecyclerView 类图"></p>
+<h3 id="LayoutManager"><a href="#LayoutManager" class="headerlink" title="LayoutManager"></a>LayoutManager</h3><p>RecyclerView 通过适配器模式把 Measure 和Layout 的过程交给了LayoutManager 去管理。</p>
+<h5 id="LayoutManager-控制着RecyclerView-的onMeasure和onLayout方法，开发者可以自定义也可以使用-系统自带的三种LayoutManager方法。"><a href="#LayoutManager-控制着RecyclerView-的onMeasure和onLayout方法，开发者可以自定义也可以使用-系统自带的三种LayoutManager方法。" class="headerlink" title="LayoutManager 控制着RecyclerView 的onMeasure和onLayout方法，开发者可以自定义也可以使用 系统自带的三种LayoutManager方法。"></a>LayoutManager 控制着RecyclerView 的onMeasure和onLayout方法，开发者可以自定义也可以使用 系统自带的三种LayoutManager方法。</h5><ul>
+<li>LinearLayoutManager:线性布局,横向或者纵向滑动列表</li>
+<li>GridLayoutManager:表格布局</li>
+<li>StaggeredGridLayoutManager:流式布局,例如瀑布流效果</li>
+</ul>
+<p>####LayoutManager.onMeasure<br>        public void onMeasure(Recycler recycler, State state, int widthSpec, int heightSpec) {<br>            mRecyclerView.defaultOnMeasure(widthSpec, heightSpec);<br>        }</p>
+<p>####RecyclerView.onLayout<br>    @Override<br>    protected void onLayout(boolean changed, int l, int t, int r, int b) {<br>        TraceCompat.beginSection(TRACE_ON_LAYOUT_TAG);<br>        dispatchLayout(); //绘制子view<br>        TraceCompat.endSection();<br>        mFirstLayoutComplete = true;</p>
+<pre><code>} 
+</code></pre><p>–</p>
+<pre><code>void dispatchLayout() {
+    if (mAdapter == null) {
+        Log.e(TAG, &quot;No adapter attached; skipping layout&quot;);
+        // leave the state in START
+        return;
+    }
+    if (mLayout == null) {
+        Log.e(TAG, &quot;No layout manager attached; skipping layout&quot;);
+        // leave the state in START
+        return;
+    }
+    mState.mIsMeasuring = false;
+    if (mState.mLayoutStep == State.STEP_START) {
+        dispatchLayoutStep1();
+        mLayout.setExactMeasureSpecsFrom(this);
+        dispatchLayoutStep2();
+    } else if (mAdapterHelper.hasUpdates() || mLayout.getWidth() != getWidth() ||
+            mLayout.getHeight() != getHeight()) {
+        // First 2 steps are done in onMeasure but looks like we have to run again due to
+        // changed size.
+        mLayout.setExactMeasureSpecsFrom(this);
+        dispatchLayoutStep2();
+    } else {
+        // always make sure we sync them (to ensure mode is exact)
+        mLayout.setExactMeasureSpecsFrom(this);
+    }
+    dispatchLayoutStep3();
+}
+
+
+/**
+ * The first step of a layout where we;
+ * - process adapter updates
+ * - decide which animation should run
+ * - save information about current views
+ * - If necessary, run predictive layout and save its information
+ */
+private void dispatchLayoutStep1() {
+    mState.assertLayoutStep(State.STEP_START);
+    mState.mIsMeasuring = false;
+    eatRequestLayout();
+    mViewInfoStore.clear();
+    onEnterLayoutOrScroll();
+    processAdapterUpdatesAndSetAnimationFlags();
+    saveFocusInfo();
+    mState.mTrackOldChangeHolders = mState.mRunSimpleAnimations &amp;&amp; mItemsChanged;
+    mItemsAddedOrRemoved = mItemsChanged = false;
+    mState.mInPreLayout = mState.mRunPredictiveAnimations;
+    mState.mItemCount = mAdapter.getItemCount();
+    findMinMaxChildLayoutPositions(mMinMaxLayoutPositions);
+
+    if (mState.mRunSimpleAnimations) {
+        // Step 0: Find out where all non-removed items are, pre-layout
+        int count = mChildHelper.getChildCount();
+        for (int i = 0; i &lt; count; ++i) {
+            final ViewHolder holder = getChildViewHolderInt(mChildHelper.getChildAt(i));
+            if (holder.shouldIgnore() || (holder.isInvalid() &amp;&amp; !mAdapter.hasStableIds())) {
+                continue;
+            }
+            final ItemHolderInfo animationInfo = mItemAnimator
+                    .recordPreLayoutInformation(mState, holder,
+                            ItemAnimator.buildAdapterChangeFlagsForAnimations(holder),
+                            holder.getUnmodifiedPayloads());
+            mViewInfoStore.addToPreLayout(holder, animationInfo);
+            if (mState.mTrackOldChangeHolders &amp;&amp; holder.isUpdated() &amp;&amp; !holder.isRemoved()
+                    &amp;&amp; !holder.shouldIgnore() &amp;&amp; !holder.isInvalid()) {
+                long key = getChangedHolderKey(holder);
+                // This is NOT the only place where a ViewHolder is added to old change holders
+                // list. There is another case where:
+                //    * A VH is currently hidden but not deleted
+                //    * The hidden item is changed in the adapter
+                //    * Layout manager decides to layout the item in the pre-Layout pass (step1)
+                // When this case is detected, RV will un-hide that view and add to the old
+                // change holders list.
+                mViewInfoStore.addToOldChangeHolders(key, holder);
+            }
+        }
+    }
+    if (mState.mRunPredictiveAnimations) {
+        // Step 1: run prelayout: This will use the old positions of items. The layout manager
+        // is expected to layout everything, even removed items (though not to add removed
+        // items back to the container). This gives the pre-layout position of APPEARING views
+        // which come into existence as part of the real layout.
+
+        // Save old positions so that LayoutManager can run its mapping logic.
+        saveOldPositions();
+        final boolean didStructureChange = mState.mStructureChanged;
+        mState.mStructureChanged = false;
+        // temporarily disable flag because we are asking for previous layout
+        mLayout.onLayoutChildren(mRecycler, mState);
+        mState.mStructureChanged = didStructureChange;
+
+        for (int i = 0; i &lt; mChildHelper.getChildCount(); ++i) {
+            final View child = mChildHelper.getChildAt(i);
+            final ViewHolder viewHolder = getChildViewHolderInt(child);
+            if (viewHolder.shouldIgnore()) {
+                continue;
+            }
+            if (!mViewInfoStore.isInPreLayout(viewHolder)) {
+                int flags = ItemAnimator.buildAdapterChangeFlagsForAnimations(viewHolder);
+                boolean wasHidden = viewHolder
+                        .hasAnyOfTheFlags(ViewHolder.FLAG_BOUNCED_FROM_HIDDEN_LIST);
+                if (!wasHidden) {
+                    flags |= ItemAnimator.FLAG_APPEARED_IN_PRE_LAYOUT;
+                }
+                final ItemHolderInfo animationInfo = mItemAnimator.recordPreLayoutInformation(
+                        mState, viewHolder, flags, viewHolder.getUnmodifiedPayloads());
+                if (wasHidden) {
+                    recordAnimationInfoIfBouncedHiddenView(viewHolder, animationInfo);
+                } else {
+                    mViewInfoStore.addToAppearedInPreLayoutHolders(viewHolder, animationInfo);
+                }
+            }
+        }
+        // we don&apos;t process disappearing list because they may re-appear in post layout pass.
+        clearOldPositions();
+    } else {
+        clearOldPositions();
+    }
+    onExitLayoutOrScroll();
+    resumeRequestLayout(false);
+    mState.mLayoutStep = State.STEP_LAYOUT;
+}
+</code></pre><p>–</p>
+<pre><code>/**
+ * The second layout step where we do the actual layout of the views for the final state.
+ * This step might be run multiple times if necessary (e.g. measure).
+ */
+private void dispatchLayoutStep2() {
+    eatRequestLayout();
+    onEnterLayoutOrScroll();
+    mState.assertLayoutStep(State.STEP_LAYOUT | State.STEP_ANIMATIONS);
+    mAdapterHelper.consumeUpdatesInOnePass();
+    mState.mItemCount = mAdapter.getItemCount();
+    mState.mDeletedInvisibleItemCountSincePreviousLayout = 0;
+
+    // Step 2: Run layout
+    mState.mInPreLayout = false;
+    mLayout.onLayoutChildren(mRecycler, mState);
+
+    mState.mStructureChanged = false;
+    mPendingSavedState = null;
+
+    // onLayoutChildren may have caused client code to disable item animations; re-check
+    mState.mRunSimpleAnimations = mState.mRunSimpleAnimations &amp;&amp; mItemAnimator != null;
+    mState.mLayoutStep = State.STEP_ANIMATIONS;
+    onExitLayoutOrScroll();
+    resumeRequestLayout(false);
+}
+</code></pre><p>–<br>    /**</p>
+<pre><code> * The final step of the layout where we save the information about views for animations,
+ * trigger animations and do any necessary cleanup.
+ */
+private void dispatchLayoutStep3() {
+    mState.assertLayoutStep(State.STEP_ANIMATIONS);
+    eatRequestLayout();
+    onEnterLayoutOrScroll();
+    mState.mLayoutStep = State.STEP_START;
+    if (mState.mRunSimpleAnimations) {
+        // Step 3: Find out where things are now, and process change animations.
+        // traverse list in reverse because we may call animateChange in the loop which may
+        // remove the target view holder.
+        for (int i = mChildHelper.getChildCount() - 1; i &gt;= 0; i--) {
+            ViewHolder holder = getChildViewHolderInt(mChildHelper.getChildAt(i));
+            if (holder.shouldIgnore()) {
+                continue;
+            }
+            long key = getChangedHolderKey(holder);
+            final ItemHolderInfo animationInfo = mItemAnimator
+                    .recordPostLayoutInformation(mState, holder);
+            ViewHolder oldChangeViewHolder = mViewInfoStore.getFromOldChangeHolders(key);
+            if (oldChangeViewHolder != null &amp;&amp; !oldChangeViewHolder.shouldIgnore()) {
+                // run a change animation
+
+                // If an Item is CHANGED but the updated version is disappearing, it creates
+                // a conflicting case.
+                // Since a view that is marked as disappearing is likely to be going out of
+                // bounds, we run a change animation. Both views will be cleaned automatically
+                // once their animations finish.
+                // On the other hand, if it is the same view holder instance, we run a
+                // disappearing animation instead because we are not going to rebind the updated
+                // VH unless it is enforced by the layout manager.
+                final boolean oldDisappearing = mViewInfoStore.isDisappearing(
+                        oldChangeViewHolder);
+                final boolean newDisappearing = mViewInfoStore.isDisappearing(holder);
+                if (oldDisappearing &amp;&amp; oldChangeViewHolder == holder) {
+                    // run disappear animation instead of change
+                    mViewInfoStore.addToPostLayout(holder, animationInfo);
+                } else {
+                    final ItemHolderInfo preInfo = mViewInfoStore.popFromPreLayout(
+                            oldChangeViewHolder);
+                    // we add and remove so that any post info is merged.
+                    mViewInfoStore.addToPostLayout(holder, animationInfo);
+                    ItemHolderInfo postInfo = mViewInfoStore.popFromPostLayout(holder);
+                    if (preInfo == null) {
+                        handleMissingPreInfoForChangeError(key, holder, oldChangeViewHolder);
+                    } else {
+                        animateChange(oldChangeViewHolder, holder, preInfo, postInfo,
+                                oldDisappearing, newDisappearing);
+                    }
+                }
+            } else {
+                mViewInfoStore.addToPostLayout(holder, animationInfo);
+            }
+        }
+
+        // Step 4: Process view info lists and trigger animations
+        mViewInfoStore.process(mViewInfoProcessCallback);
+    }
+
+    mLayout.removeAndRecycleScrapInt(mRecycler);
+    mState.mPreviousLayoutItemCount = mState.mItemCount;
+    mDataSetHasChangedAfterLayout = false;
+    mState.mRunSimpleAnimations = false;
+
+    mState.mRunPredictiveAnimations = false;
+    mLayout.mRequestedSimpleAnimations = false;
+    if (mRecycler.mChangedScrap != null) {
+        mRecycler.mChangedScrap.clear();
+    }
+    if (mLayout.mPrefetchMaxObservedInInitialPrefetch) {
+        // Initial prefetch has expanded cache, so reset until next prefetch.
+        // This prevents initial prefetches from expanding the cache permanently.
+        mLayout.mPrefetchMaxCountObserved = 0;
+        mLayout.mPrefetchMaxObservedInInitialPrefetch = false;
+        mRecycler.updateViewCacheSize();
+    }
+
+    mLayout.onLayoutCompleted(mState);
+    onExitLayoutOrScroll();
+    resumeRequestLayout(false);
+    mViewInfoStore.clear();
+    if (didChildRangeChange(mMinMaxLayoutPositions[0], mMinMaxLayoutPositions[1])) {
+        dispatchOnScrolled(0, 0);
+    }
+    recoverFocusFromState();
+    resetFocusInfo();
+}
+</code></pre><p>####LayoutManager.onLayout</p>
+<h4 id="如何自定义一个LayoutManager"><a href="#如何自定义一个LayoutManager" class="headerlink" title="如何自定义一个LayoutManager"></a>如何自定义一个LayoutManager</h4><ul>
+<li>通常重写一个LayoutManager可以分为以下几个步骤</li>
+<li>指定默认的LayoutParams</li>
+<li>测量并记录每个item的信息</li>
+<li>回收以及放置各个item</li>
+<li>处理滚动</li>
+</ul>
+<h3 id="滑动时RecyclerView-做了什么？"><a href="#滑动时RecyclerView-做了什么？" class="headerlink" title="滑动时RecyclerView 做了什么？"></a>滑动时RecyclerView 做了什么？</h3><p>RecyclerView 重写了OnTouchEvent事件 并在 ACTION_MOVE 中调用了 scrollByInternal</p>
+<pre><code>/**
+ * Does not perform bounds checking. Used by internal methods that have already validated input.
+ * &lt;p&gt;
+ * It also reports any unused scroll request to the related EdgeEffect.
+ *
+ * @param x The amount of horizontal scroll request
+ * @param y The amount of vertical scroll request
+ * @param ev The originating MotionEvent, or null if not from a touch event.
+ *
+ * @return Whether any scroll was consumed in either direction.
+ */
+boolean scrollByInternal(int x, int y, MotionEvent ev) {
+    int unconsumedX = 0, unconsumedY = 0;
+    int consumedX = 0, consumedY = 0;
+
+    consumePendingUpdateOperations();
+    if (mAdapter != null) {
+        eatRequestLayout();
+        onEnterLayoutOrScroll();
+        TraceCompat.beginSection(TRACE_SCROLL_TAG);
+        if (x != 0) {
+            consumedX = mLayout.scrollHorizontallyBy(x, mRecycler, mState);
+            unconsumedX = x - consumedX;
+        }
+        if (y != 0) {
+            consumedY = mLayout.scrollVerticallyBy(y, mRecycler, mState);
+            unconsumedY = y - consumedY;
+        }
+        TraceCompat.endSection();
+        repositionShadowingViews();
+        onExitLayoutOrScroll();
+        resumeRequestLayout(false);
+    }
+    if (!mItemDecorations.isEmpty()) {
+        invalidate();
+    }
+
+    if (dispatchNestedScroll(consumedX, consumedY, unconsumedX, unconsumedY, mScrollOffset)) {
+        // Update the last touch co-ords, taking any scroll offset into account
+        mLastTouchX -= mScrollOffset[0];
+        mLastTouchY -= mScrollOffset[1];
+        if (ev != null) {
+            ev.offsetLocation(mScrollOffset[0], mScrollOffset[1]);
+        }
+        mNestedOffsets[0] += mScrollOffset[0];
+        mNestedOffsets[1] += mScrollOffset[1];
+    } else if (getOverScrollMode() != View.OVER_SCROLL_NEVER) {
+        if (ev != null) {
+            pullGlows(ev.getX(), unconsumedX, ev.getY(), unconsumedY);
+        }
+        considerReleasingGlowsOnScroll(x, y);
+    }
+    if (consumedX != 0 || consumedY != 0) {
+        dispatchOnScrolled(consumedX, consumedY);
+    }
+    if (!awakenScrollBars()) {
+        invalidate();
+    }
+    return consumedX != 0 || consumedY != 0;
+}
+</code></pre><h3 id="Recycler-实现缓存"><a href="#Recycler-实现缓存" class="headerlink" title="Recycler 实现缓存"></a>Recycler 实现缓存</h3><p>与ListView不同，RecyclerView的缓存是分为多级的，但其实整个的缓存逻辑还是很容易理解的，Recycler的作用就是重用ItemView。在填充ItemView的时候，ItemView是从Recycler获取的；滑出屏幕的ItemView是由它回收的。对于不同状态的ItemView存储在了不同的集合中，比如有scrapped、cached、exCached、recycled，当然这些集合并不是都定义在同一个类里。<br>在RecyclerView中，有两个缓存：Scrap和Recycle。Scrap中文就是废料的意思，Recycle对应是回收的意思。这两个缓存有什么作用呢？首先Scrap缓存是指里面缓存的View是接下来需要用到的，即里面的绑定的数据无需更改，可以直接拿来用的，是一个轻量级的缓存集合；而Recycle的缓存的View为里面的数据需要重新绑定，即需要通过Adapter重新绑定数据。我们可以自己选择将View缓存到哪里。我们有两种选择的方式：Detach和Remove。Detach的View放在Scrap缓存中，Remove掉的View放在Recycle缓存中；</p>
+<p>在什么样的场景中使用Detach呢？主要是在我们的代码执行结束之前，我们需要反复去将View移除并且马上又要添加进去时，选择Datach方式，比如：当我们对View进行重新排序的时候，可以选择Detach，因为屏幕上显示的就是这些position对应的View，我们并不需要重新去绑定数据，这明显可以提高效率。使用Detach方式可以通过函数detachAndScrapView()实现。</p>
+<p>而使用Remove的方式，是当View不在屏幕中有任何显示的时候，你需要将它Remove掉，以备后面循环利用。可以通过函数removeAndRecycleView()实现。</p>
+<p>当我们去获取一个新的View时，RecyclerView首先去检查Scrap缓存是否有对应的position的View，如果有，则直接拿出来可以直接用，不用去重新绑定数据；如果没有，则从Recycle缓存中取，并且会回调Adapter的onBindViewHolder方法（当然了，如果Recycle缓存为空，还会调用onCreateViewHolder方法），最后再将绑定好新数据的View返回。<br>回到之前的layoutChunk方法中，有行代码layoutState.next(recycler)，它的作用自然就是获取ItemView，我们进入这个方法查看，最终它会调用到RecyclerView.Recycler.getViewForPosition().tryGetViewHolderForPositionByDeadline方法：</p>
+<pre><code>/**
+ * Attempts to get the ViewHolder for the given position, either from the Recycler scrap,
+ * cache, the RecycledViewPool, or creating it directly.
+ * &lt;p&gt;
+ * If a deadlineNs other than {@link #FOREVER_NS} is passed, this method early return
+ * rather than constructing or binding a ViewHolder if it doesn&apos;t think it has time.
+ * If a ViewHolder must be constructed and not enough time remains, null is returned. If a
+ * ViewHolder is aquired and must be bound but not enough time remains, an unbound holder is
+ * returned. Use {@link ViewHolder#isBound()} on the returned object to check for this.
+ *
+ * @param position Position of ViewHolder to be returned.
+ * @param dryRun True if the ViewHolder should not be removed from scrap/cache/
+ * @param deadlineNs Time, relative to getNanoTime(), by which bind/create work should
+ *                   complete. If FOREVER_NS is passed, this method will not fail to
+ *                   create/bind the holder if needed.
+ *
+ * @return ViewHolder for requested position
+ */
+@Nullable
+ViewHolder tryGetViewHolderForPositionByDeadline(int position,
+        boolean dryRun, long deadlineNs) {
+    if (position &lt; 0 || position &gt;= mState.getItemCount()) {
+        throw new IndexOutOfBoundsException(&quot;Invalid item position &quot; + position
+                + &quot;(&quot; + position + &quot;). Item count:&quot; + mState.getItemCount());
+    }
+    boolean fromScrapOrHiddenOrCache = false;
+    ViewHolder holder = null;
+    // 0) If there is a changed scrap, try to find from there
+    if (mState.isPreLayout()) {
+        holder = getChangedScrapViewForPosition(position);
+        fromScrapOrHiddenOrCache = holder != null;
+    }
+    // 1) Find by position from scrap/hidden list/cache
+    if (holder == null) {
+        holder = getScrapOrHiddenOrCachedHolderForPosition(position, dryRun);
+        if (holder != null) {
+            if (!validateViewHolderForOffsetPosition(holder)) {
+                // recycle holder (and unscrap if relevant) since it can&apos;t be used
+                if (!dryRun) {
+                    // we would like to recycle this but need to make sure it is not used by
+                    // animation logic etc.
+                    holder.addFlags(ViewHolder.FLAG_INVALID);
+                    if (holder.isScrap()) {
+                        removeDetachedView(holder.itemView, false);
+                        holder.unScrap();
+                    } else if (holder.wasReturnedFromScrap()) {
+                        holder.clearReturnedFromScrapFlag();
+                    }
+                    recycleViewHolderInternal(holder);
+                }
+                holder = null;
+            } else {
+                fromScrapOrHiddenOrCache = true;
+            }
+        }
+    }
+    if (holder == null) {
+        final int offsetPosition = mAdapterHelper.findPositionOffset(position);
+        if (offsetPosition &lt; 0 || offsetPosition &gt;= mAdapter.getItemCount()) {
+            throw new IndexOutOfBoundsException(&quot;Inconsistency detected. Invalid item &quot;
+                    + &quot;position &quot; + position + &quot;(offset:&quot; + offsetPosition + &quot;).&quot;
+                    + &quot;state:&quot; + mState.getItemCount());
+        }
+
+        final int type = mAdapter.getItemViewType(offsetPosition);
+        // 2) Find from scrap/cache via stable ids, if exists
+        if (mAdapter.hasStableIds()) {
+            holder = getScrapOrCachedViewForId(mAdapter.getItemId(offsetPosition),
+                    type, dryRun);
+            if (holder != null) {
+                // update position
+                holder.mPosition = offsetPosition;
+                fromScrapOrHiddenOrCache = true;
+            }
+        }
+        if (holder == null &amp;&amp; mViewCacheExtension != null) {
+            // We are NOT sending the offsetPosition because LayoutManager does not
+            // know it.
+            final View view = mViewCacheExtension
+                    .getViewForPositionAndType(this, position, type);
+            if (view != null) {
+                holder = getChildViewHolder(view);
+                if (holder == null) {
+                    throw new IllegalArgumentException(&quot;getViewForPositionAndType returned&quot;
+                            + &quot; a view which does not have a ViewHolder&quot;);
+                } else if (holder.shouldIgnore()) {
+                    throw new IllegalArgumentException(&quot;getViewForPositionAndType returned&quot;
+                            + &quot; a view that is ignored. You must call stopIgnoring before&quot;
+                            + &quot; returning this view.&quot;);
+                }
+            }
+        }
+        if (holder == null) { // fallback to pool
+            if (DEBUG) {
+                Log.d(TAG, &quot;tryGetViewHolderForPositionByDeadline(&quot;
+                        + position + &quot;) fetching from shared pool&quot;);
+            }
+            holder = getRecycledViewPool().getRecycledView(type);
+            if (holder != null) {
+                holder.resetInternal();
+                if (FORCE_INVALIDATE_DISPLAY_LIST) {
+                    invalidateDisplayListInt(holder);
+                }
+            }
+        }
+        if (holder == null) {
+            long start = getNanoTime();
+            if (deadlineNs != FOREVER_NS
+                    &amp;&amp; !mRecyclerPool.willCreateInTime(type, start, deadlineNs)) {
+                // abort - we have a deadline we can&apos;t meet
+                return null;
+            }
+            holder = mAdapter.createViewHolder(RecyclerView.this, type);
+            if (ALLOW_THREAD_GAP_WORK) {
+                // only bother finding nested RV if prefetching
+                RecyclerView innerView = findNestedRecyclerView(holder.itemView);
+                if (innerView != null) {
+                    holder.mNestedRecyclerView = new WeakReference&lt;&gt;(innerView);
+                }
+            }
+
+            long end = getNanoTime();
+            mRecyclerPool.factorInCreateTime(type, end - start);
+            if (DEBUG) {
+                Log.d(TAG, &quot;tryGetViewHolderForPositionByDeadline created new ViewHolder&quot;);
+            }
+        }
+    }
+
+    // This is very ugly but the only place we can grab this information
+    // before the View is rebound and returned to the LayoutManager for post layout ops.
+    // We don&apos;t need this in pre-layout since the VH is not updated by the LM.
+    if (fromScrapOrHiddenOrCache &amp;&amp; !mState.isPreLayout() &amp;&amp; holder
+            .hasAnyOfTheFlags(ViewHolder.FLAG_BOUNCED_FROM_HIDDEN_LIST)) {
+        holder.setFlags(0, ViewHolder.FLAG_BOUNCED_FROM_HIDDEN_LIST);
+        if (mState.mRunSimpleAnimations) {
+            int changeFlags = ItemAnimator
+                    .buildAdapterChangeFlagsForAnimations(holder);
+            changeFlags |= ItemAnimator.FLAG_APPEARED_IN_PRE_LAYOUT;
+            final ItemHolderInfo info = mItemAnimator.recordPreLayoutInformation(mState,
+                    holder, changeFlags, holder.getUnmodifiedPayloads());
+            recordAnimationInfoIfBouncedHiddenView(holder, info);
+        }
+    }
+
+    boolean bound = false;
+    if (mState.isPreLayout() &amp;&amp; holder.isBound()) {
+        // do not update unless we absolutely have to.
+        holder.mPreLayoutPosition = position;
+    } else if (!holder.isBound() || holder.needsUpdate() || holder.isInvalid()) {
+        if (DEBUG &amp;&amp; holder.isRemoved()) {
+            throw new IllegalStateException(&quot;Removed holder should be bound and it should&quot;
+                    + &quot; come here only in pre-layout. Holder: &quot; + holder);
+        }
+        final int offsetPosition = mAdapterHelper.findPositionOffset(position);
+        bound = tryBindViewHolderByDeadline(holder, offsetPosition, position, deadlineNs);
+    }
+
+    final ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+    final LayoutParams rvLayoutParams;
+    if (lp == null) {
+        rvLayoutParams = (LayoutParams) generateDefaultLayoutParams();
+        holder.itemView.setLayoutParams(rvLayoutParams);
+    } else if (!checkLayoutParams(lp)) {
+        rvLayoutParams = (LayoutParams) generateLayoutParams(lp);
+        holder.itemView.setLayoutParams(rvLayoutParams);
+    } else {
+        rvLayoutParams = (LayoutParams) lp;
+    }
+    rvLayoutParams.mViewHolder = holder;
+    rvLayoutParams.mPendingInvalidate = fromScrapOrHiddenOrCache &amp;&amp; bound;
+    return holder;
+}
+</code></pre><h3 id="ItemAnimator-和-ItemDecoration"><a href="#ItemAnimator-和-ItemDecoration" class="headerlink" title="ItemAnimator 和 ItemDecoration"></a>ItemAnimator 和 ItemDecoration</h3>
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

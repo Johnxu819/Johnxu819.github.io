@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="Android Activity ManagerService(AMS)ActivityManagerService 是Android 提供的一个用于管理Activity 运行状态的系统进程，也是我们编写APK 应用程序时使用的最频繁的一个系统服务。
+###AMS 功能概述
+和WMS 一样，AMS也">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Android Activity ManagerService(AMS)"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Android Activity ManagerService(AMS) - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Android Activity ManagerService(AMS)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-03-30
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Android/">#Android</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="Android-Activity-ManagerService-AMS"><a href="#Android-Activity-ManagerService-AMS" class="headerlink" title="Android Activity ManagerService(AMS)"></a>Android Activity ManagerService(AMS)</h3><p>ActivityManagerService 是Android 提供的一个用于管理Activity 运行状态的系统进程，也是我们编写APK 应用程序时使用的最频繁的一个系统服务。</p>
+<p>###AMS 功能概述</p>
+<p>和WMS 一样，AMS也是寄存于systemServer中的。它会在系统启动时，创建一个线程来循环处理客户的请求。 值得一提的是,AMS 会向ServiceManager 登记多种 Binder Server ，如 ”activity“，“meminfo”，“cpuinfo” 等 ，不过只有第一个 “activity” 才是AMS 的主业，并由 Activity ManagerService 实现； 剩余服务的功能则是由其他类提供的。</p>
+<p>ActivityManagerService 提供了一个静态的main 函数，通过</p>
+<h3 id="管理当前系统中Activity的状态-Activity-Stack"><a href="#管理当前系统中Activity的状态-Activity-Stack" class="headerlink" title="管理当前系统中Activity的状态-Activity Stack"></a>管理当前系统中Activity的状态-Activity Stack</h3><p>AMS 是通过Activity Stack 来管理 记录 系统中 Activity 和其它组件状态，并提供查询功能的一个系统服务。</p>
+<ul>
+<li>AMS 的主要工作就是管理，记录，查询</li>
+<li>AMS 是系统进程的一部分（确切的说它运行于一个独立的线程中）</li>
+</ul>
+<h3 id="startActivity-的流程"><a href="#startActivity-的流程" class="headerlink" title="startActivity 的流程"></a>startActivity 的流程</h3><p>相信大家对于startActivity 并不陌生，它用于启动一个目标，Activity ，具体是哪个Activity 则是AMS 通过对系统中安装的所有程序包进行Intent 包匹配的得到的，且并不局限于当前包，甚至有可能调用到非同一进程的activity或者组件。当系统匹配到某个目标进程或者activity 后分为两种情况</p>
+<ul>
+<li>如果通过intent 匹配到了目标对象，且该程序进程已启动，那么AMS 就会通知这个进程来加载运行我们指定的目标activity。</li>
+<li>如果当前activity 所属程序没有进程在运行，AMS 就会先启动它的一个实例，然后让其运行目标Activity。</li>
+</ul>
+<p>先大致讲解一下 startActivity()所经历的函数调用流程</p>
+<p>Activity1-&gt;startActivity@ContentImpl.java-&gt;exexStartActivity@Instrumentation.java-&gt;startActivity@ActivityManagerService.java</p>
+<p>因而经过层层中转后，调用者发起的startActivity 最终还是在AMS 中实现的。</p>
+<ul>
+<li>startActivity@ActivityManagerService.java</li>
+<li>startActivityAsUser@ActivityManagerService.java</li>
+<li>startActivityMayWait@ActivityManagerService.java</li>
+<li>startActivityLocked@ActivityManagerService.java</li>
+<li>startActivityUncheckedLocked@ActivityManagerService.java</li>
+</ul>
+<h3 id="Activity-Task"><a href="#Activity-Task" class="headerlink" title="Activity Task"></a>Activity Task</h3><h4 id="什么是Activity-Task"><a href="#什么是Activity-Task" class="headerlink" title="什么是Activity Task"></a>什么是Activity Task</h4><p>Android 系统中应用程序的一大特色，就是它们不仅可以装载众多系统组件，而且可以把这些组件跨进程的组成ActivityTask，这个特性使得每个应用都不是孤立的，从而能最大限度的实现资源复用，Android采用了stack栈的机制 存储activity 或者组件， 比如 先后启动了Activity1 和Activity2 ActivityTask 会先后把它们压入栈中，这样一旦用户选择了返回，栈顶的元素就会被销毁，然后开始显示新的栈顶元素。</p>
+<h4 id="管理-Activity-Task"><a href="#管理-Activity-Task" class="headerlink" title="管理 Activity Task"></a>管理 Activity Task</h4><p>正常情况下 Activity Task 已经可以满足开发者的一般需求，但是在某些情况下，我们还是希望我们自己可以定制ActivityTask，Android系统提供了很多接口方法来管理 Activity Task</p>
+<ul>
+<li>android:taskAffinity</li>
+<li>android:launchMode</li>
+</ul>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
