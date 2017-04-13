@@ -296,10 +296,6 @@ HashMap 非线程安全，在多线">
         return findTreeNode(h, k, null);
     }
 
-    /**
-     * Returns the TreeNode (or null if not found) for the given key
-     * starting at given root.
-     */
     final TreeNode&lt;K,V&gt; findTreeNode(int h, Object k, Class&lt;?&gt; kc) {
         if (k != null) {
             TreeNode&lt;K,V&gt; p = this;
@@ -329,7 +325,7 @@ HashMap 非线程安全，在多线">
         return null;
     }
 }
-</code></pre><p>// 和HashMap相比，这里的TreeNode相当简洁；ConcurrentHashMap链表转树时，并不会直接转，正如注释（Nodes for use in TreeBins）所说，只是把这些节点包装成TreeNode放到TreeBin中，再由TreeBin来转化红黑树。</p>
+</code></pre><p>和HashMap相比，这里的TreeNode相当简洁；ConcurrentHashMap链表转树时，并不会直接转，正如注释（Nodes for use in TreeBins）所说，只是把这些节点包装成TreeNode放到TreeBin中，再由TreeBin来转化红黑树。</p>
 <h5 id="TreeBin"><a href="#TreeBin" class="headerlink" title="TreeBin"></a>TreeBin</h5><p> TreeBin用于封装维护TreeNode，包含putTreeVal、lookRoot、UNlookRoot、remove、balanceInsetion、balanceDeletion等方法，这里只分析其构造函数。</p>
 <p> 当链表转树时，用于封装TreeNode，也就是说，ConcurrentHashMap的红黑树存放的时TreeBin，而不是treeNode。</p>
 <pre><code>static final class TreeBin&lt;K,V&gt; extends Node&lt;K,V&gt; {
