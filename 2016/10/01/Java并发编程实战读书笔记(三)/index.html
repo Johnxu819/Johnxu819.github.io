@@ -212,7 +212,7 @@
 </code></pre><p>  }</p>
 </li>
 </ul>
-<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><h4 id="锁顺序死锁"><a href="#锁顺序死锁" class="headerlink" title="锁顺序死锁"></a>锁顺序死锁</h4><p>两个线程试图以不同的顺序来获得相同的锁，如果按照相同的顺序来请求锁，</p>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><h4 id="锁顺序死锁"><a href="#锁顺序死锁" class="headerlink" title="锁顺序死锁"></a>锁顺序死锁</h4><p>两个线程试图以不同的顺序来获得相同的锁，如果按照相同的顺序来请求锁，</p>
 <h4 id="动态的锁顺序死锁"><a href="#动态的锁顺序死锁" class="headerlink" title="动态的锁顺序死锁"></a>动态的锁顺序死锁</h4><p>有时候，并不能清楚的知道是否在锁顺序上有足够的控制权来避免死锁的发生</p>
 <pre><code>public void tranferMoney(Account fromAccount,
 Account toAccount,DollarAmount amount) throws Exception{
