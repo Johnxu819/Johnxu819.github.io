@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="结构和并发应用程序（一）任务执行为每个任务请求都创建一个线程，虽然一定程度上会提供系统的串行执行的性能，但是当 创建大量线程时 就会出现以下的问题
+
+线程生命周期的开销非常高
+资源消耗大，大量空闲的线程会占用许多内存
+稳定性 在可创建线程的数量上存在一个限制，这个限制随着平台的不同而不同，并且受多个">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Java并发编程实战读书笔记(三)"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Android Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Java并发编程实战读书笔记(三) - Android Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Java并发编程实战读书笔记(三)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-10-01
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java-并发/">#Java 并发</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="结构和并发应用程序"><a href="#结构和并发应用程序" class="headerlink" title="结构和并发应用程序"></a>结构和并发应用程序</h3><h4 id="（一）任务执行"><a href="#（一）任务执行" class="headerlink" title="（一）任务执行"></a>（一）任务执行</h4><p>为每个任务请求都创建一个线程，虽然一定程度上会提供系统的串行执行的性能，但是当 创建大量线程时 就会出现以下的问题</p>
+<ul>
+<li>线程生命周期的开销非常高</li>
+<li>资源消耗大，大量空闲的线程会占用许多内存</li>
+<li>稳定性 在可创建线程的数量上存在一个限制，这个限制随着平台的不同而不同，并且受多个因素的制约，包括JVM的启动参数，Thread构造函数请求的栈大小，以及底层操作系统对线程的限制。</li>
+</ul>
+<p>所以合适才是最主要的，如果单纯的为每个任务都分配一个线程，当应用程序部署后处于高负载下运行时，某些恶意的用户或者过度的用户，都会使得Web服务器的负载达到某个阙值，从而使服务器崩溃。</p>
+<h4 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h4><p>Excutor 基于 生产者-消费者模式，提交任务的操作相当于生产者，执行已提交的 Runnable 任务对象。此接口提供一种将任务提交与每个任务将如何运行的机制（包括线程使用的细节、调度等）分离开来的方法。通常使用 Executor 而不是显式地创建线程。</p>
+<h4 id="ExcutorService"><a href="#ExcutorService" class="headerlink" title="ExcutorService"></a>ExcutorService</h4><p>ExecutorService提供了管理终止的方法，以及可为跟踪一个或多个异步任务执行状况而生成 Future 的方法。<br>可以关闭 ExecutorService，这将导致其拒绝新任务。提供两个方法来关闭 ExecutorService。<br>shutdown()方法在终止前允许执行以前提交的任务，而 shutdownNow() 方法阻止等待任务的启动并试图停止当前正在执行的任务。在终止后，执行程序没有任务在执行，也没有任务在等待执行，并且无法提交新任务。应该关闭未使用的 ExecutorService以允许回收其资源。<br>通过创建并返回一个可用于取消执行和/或等待完成的 Future，方法submit扩展了基本方法 Executor.execute(java.lang.Runnable)。<br>方法 invokeAny 和 invokeAll 是批量执行的最常用形式，它们执行任务 collection，然后等待至少一个，<br>或全部任务完成（可使用 ExecutorCompletionService类来编写这些方法的自定义变体）。<br>Executors类为创建ExecutorService提供了便捷的工厂方法。</p>
+<h4 id="Thread-pool"><a href="#Thread-pool" class="headerlink" title="Thread pool"></a>Thread pool</h4><ul>
+<li>newFixedThreadPool newFiexdThreadPool 将创建一个固定长度的线程池，每当提交一个任务时就创建一个线程，直到达到线程池的最大数量。</li>
+<li>newCachedThreadPool 将创建一个可缓存的线程池，如果线程池的当前规模超过了处理需求时，那么将回收空闲的线程，而当需求增加时，则可以添加新的线程，线程池的规模没有任何限制。</li>
+<li>newSingleThreadExecutor 是一个单线程的Executor 它创建单个工作线程来执行任务</li>
+<li>newScheduledThreadPool </li>
+</ul>
+<h4 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h4><h3 id="Cancellation-and-shutdown"><a href="#Cancellation-and-shutdown" class="headerlink" title="Cancellation and shutdown"></a>Cancellation and shutdown</h3><p>取消和关闭线程的方法有两种</p>
+<ul>
+<li>设置 取消标志</li>
+<li><p>中断线程 对于中断请求的真正的立即是，它并不会立即的去中断线程，而是发出一个中断请求，就像Thread 里面的interrupt 方法一样的，它会调用interrupted 方法并将interrupt 设置为true</p>
+<p>   public static boolean interrupted() {</p>
+<pre><code>return currentThread().isInterrupted(true);
+</code></pre><p>  }</p>
+</li>
+</ul>
+<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><h4 id="锁顺序死锁"><a href="#锁顺序死锁" class="headerlink" title="锁顺序死锁"></a>锁顺序死锁</h4><p>两个线程试图以不同的顺序来获得相同的锁，如果按照相同的顺序来请求锁，</p>
+<h4 id="动态的锁顺序死锁"><a href="#动态的锁顺序死锁" class="headerlink" title="动态的锁顺序死锁"></a>动态的锁顺序死锁</h4><p>有时候，并不能清楚的知道是否在锁顺序上有足够的控制权来避免死锁的发生</p>
+<pre><code>public void tranferMoney(Account fromAccount,
+Account toAccount,DollarAmount amount) throws Exception{
+
+    synchronized (fromAccount){
+        synchronized (toAccount){
+            if(fromAccount.getBalance().compareTo(amount)&lt;0){
+                throw new Exception();
+            }else {
+                fromAccount.debit(amount);
+                toAccount.credit(amount);
+            }            
+        }
+    }
+}
+</code></pre><p>上面的代码就是一个很典型的动态的锁顺序死锁，所有的线程似乎都是按照相同的顺序来获得锁，但事实上锁的顺序取决于传递给transferMoney的参数顺序，而这些参数顺序又取决于外部输入。如果两个线程同时调用transfMoney，那么就会发生死锁</p>
+<ul>
+<li>A Thread ：tranferMoney(myAccount,yourAccount,10); </li>
+<li>B Thread ：tranferMoney (yourAccount,myAccount,20); </li>
+</ul>
+<p>如何解决呢？ 由于我们无法控制参数的顺序，因此要解决这个问题，必须定义锁的顺序，并在整个应用程序中都按照这个顺序来获取锁。 </p>
+<pre><code>private static final  Object tieLoack=new Object();
+
+public void tranferMoney(Account fromAccount,Account toAccount,DollarAmount amount) throws Exception{
+
+    class Helper{
+        public void transfer()  throws Exception{
+                    if(fromAccount.getBalance().compareTo(amount)&lt;0){
+                        throw new Exception();
+                    }else {
+                        fromAccount.debit(amount);
+                        toAccount.credit(amount);
+                    }
+        }
+    }
+
+    int fromHash=System.identityHashCode(fromHash);
+    int toHash=System.identityHashCode(toHash);
+
+    if(fromHash&lt;toHash){
+        synchronized (fromAccount){
+            synchronized (toAccount){
+                new Helper().transfer();
+            }
+        }
+    }else if(fromHash&gt;toHash){
+        synchronized (toAccount){
+            synchronized (fromAccount){
+                new Helper().transfer();
+            }
+        }
+    }else{
+        synchronized(tieLoack){
+            synchronized (fromAccount){
+                synchronized (toAccount){
+                    new Helper().transfer();
+                }
+            }                
+        }
+    }
+}
+</code></pre><h4 id="在协作对象之间发生的死锁"><a href="#在协作对象之间发生的死锁" class="headerlink" title="在协作对象之间发生的死锁"></a>在协作对象之间发生的死锁</h4><p>有时候不在同一个方法内，但是两个类却存在协作的对象中也有可能存在死锁的情况<br>如下代码所示</p>
+<pre><code>class Taxi {
+    private Point location,destination;
+    private final Dispatcher dispatcher;
+
+    public Taxi(Dispatcher dispatcher){
+        this.dispatcher=dispatcher;
+    }
+
+    public synchronized Point getLocation(){
+        return location;
+    }
+
+    public synchronized  setLocation(){
+        this.location=location;
+        if(location.equals(destination)){
+                dispatcher.notifyAvailable(this);
+        }
+    }
+
+}
+
+class Dispatcher{
+    private  final HashSet&lt;Taxi&gt; taxis;
+    private  final HashSet&lt;Taxi&gt; availableTaxis;
+
+
+    public Dispatcher(){
+        taxis=new HashSet&lt;Taxi&gt;();
+        availableTaxis=new HashSet&lt;Taxi&gt;();
+    }
+
+    public synchronized void notifyAvailable(Taxi taxi){
+        availableTaxis.add(taxi);
+    }
+
+    public synchronized Image getImage(){
+        Image image=new Image();
+        for (Taxi t:taxis){
+            image.draw(t.getLocation());
+        }
+        return image;
+    }
+
+}
+</code></pre><p>尽管没有任何方法会显式的获取两个锁，但setLocation和getImage等方法的调用者都会获得两个锁，如果一个线程在收到GPS接收器的更新事件时调用setLocation,那么它将首先更新出租车的位置，然后判断它是否到达了目的地，如果已经到达，它会通知dispatcher，它需要一个新的目的地，因为setLocation和notifyAvailable都是同步方法，因此调用setLocation 的线程将首先获取Taxi 的锁，然后获取dispatcher的锁，同样，调用getImage 的线程将首先获取Dispatcher 锁，然后再获取每一个Taxi的锁，这样就会导致两个线程按照不同的顺序来获取两个锁，因此就可能产生死锁。</p>
+<p>最常见的活跃下故障就是锁顺序死锁，在设计的时候应该避免产生锁顺序死锁，确保线程在获取多个锁的时候采用一致的顺序，最好的解决方法是在程序中始终使用开放调用，这将大大减少需要同时持有多个锁的地方，也更容易发现这些地方。</p>
+<h4 id="Lock-和-ReentrantLock"><a href="#Lock-和-ReentrantLock" class="headerlink" title="Lock 和 ReentrantLock"></a>Lock 和 ReentrantLock</h4><p>ReentrantLock 在加锁和内存上提供的语义与内置锁相同，此外它还提供了一些其他功能，包括定时的锁等待，可中断的锁等待，公平性，以及实现非块结构的加锁。ReentrantLock 在性能上优于内置锁。但是使用内置锁一定要在finally 快中调用unload 方法，否则将会导致锁无法释放。</p>
+<h3 id="原子变量与非阻塞同步机制"><a href="#原子变量与非阻塞同步机制" class="headerlink" title="原子变量与非阻塞同步机制"></a>原子变量与非阻塞同步机制</h3><p>与基于锁的方案相比，非阻塞算法在设计和实现上都要复杂的多，但它们在可伸缩性和活跃性上却拥有巨大的优势。由于非阻塞算法可以使多个线程在竞争相同的数据时不发生阻塞，因此它能在粒度更细的层次上进行协调，并且极大的减少调度开销。在基于锁的算法中，如果一个线程在休眠或自旋的同时持有一个锁，那么其它线程都无法执行下去，而非阻塞算法不会受到单个线程失败的影响。</p>
+<h4 id="锁的劣势"><a href="#锁的劣势" class="headerlink" title="锁的劣势"></a>锁的劣势</h4><p>通过锁的方式来协同共享状态的访问，是采用独占的方式访问这些变量，如果出现多个线程访问的时候，一些线程就会被挂起，挂起和恢复线程的开销是非常大的，而与锁相比，volatile 变量是一种更轻量级的同步机制，因为不会发生上下文切换和线程调度等操作。</p>
+<h4 id="使用CAS-实现-线程的安全性"><a href="#使用CAS-实现-线程的安全性" class="headerlink" title="使用CAS 实现 线程的安全性"></a>使用CAS 实现 线程的安全性</h4><p>CAS就是Compare and Swap的意思，比较并操作。很多的cpu直接支持CAS指令。CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败， 失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。</p>
+<p>CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。</p>
+<p>JDK1.5中引入了底层的支持，在int、long和对象的引用等类型上都公开了CAS的操作，并且JVM把它们编译为底层硬件提供的最有效的方法，在运行CAS的平台上，运行时把它们编译为相应的机器指令。在java.util.concurrent.atomic包下面的所有的原子变量类型中，比如AtomicInteger，都使用了这些底层的JVM支持为数字类型的引用类型提供一种高效的CAS操作。</p>
+<ul>
+<li>在CAS操作中，会出现ABA问题。 就是如果V的值先由A变成B，再由B变成A，那么仍然认为是发生了变化，并需要重新执行算法中的步骤。</li>
+</ul>
+<p>有简单的解决方案：不是更新某个引用的值，而是更新两个值，包括一个引用和一个版本号，即使这个值由A变为B，然后为变为A，版本号也是不同的。</p>
+<p>AtomicStampedReference和AtomicMarkableReference支持在两个变量上执行原子的条件更新。AtomicStampedReference更新一个“对象-引用”二元组，通过在引用上加上“版本号”，从而避免ABA问题，AtomicMarkableReference将更新一个“对象引用-布尔值”的二元组。</p>
+<ul>
+<li>AtomicInteger 是一个支持原子操作的 Integer 类 ，就是保证对AtomicInteger类型变量的增加和减少操作是原子性的，不会出现多个线程下的数据不一致问题。如果不使用 AtomicInteger，要实现一个按顺序获取的 ID，就必须在每次获取时进行加锁操作，以避免出现并发时获取到同样的 ID 的现象。</li>
+</ul>
+<p>接下来通过源代码来看AtomicInteger具体是如何实现的原子操作。首先看incrementAndGet() 方法，下面是具体的代码：</p>
+<pre><code>public final int incrementAndGet() {
+    for (;;) {
+        int current = get();
+        int next = current + 1;
+        if (compareAndSet(current, next))
+            return next;
+    }
+} 
+</code></pre><p>通过源码，可以知道，这个方法的做法为先获取到当前的 value 属性值，然后将 value 加 1，赋值给一个局部的 next 变量，然而，这两步都是非线程安全的，但是内部有一个死循环，不断去做compareAndSet操作，直到成功为止，也就是修改的根本在compareAndSet方法里面，compareAndSet()方法的代码如下：</p>
+<pre><code>public final boolean compareAndSet(int expect, int update) {
+    return unsafe.compareAndSwapInt(this, valueOffset, expect, update);
+}
+</code></pre><p>compareAndSet()方法调用的compareAndSwapInt()方法的声明如下，是一个native方法:<br>publicfinal native boolean compareAndSwapInt(Object var1, long var2, int var4, intvar5);</p>
+<p>compareAndSet 传入的为执行方法时获取到的 value 属性值，next 为加 1 后的值， compareAndSet所做的为调用 Sun 的 UnSafe 的 compareAndSwapInt 方法来完成，此方法为 native 方法，compareAndSwapInt 基于的是CPU 的 CAS指令来实现的。 所以基于 CAS 的操作可认为是无阻塞的，一个线程的失败或挂起不会引起其它线程也失败或挂起。并且由于 CAS 操作是 CPU 原语，所以性能比较好。</p>
+<p>类似的，还有decrementAndGet()方法。它和incrementAndGet()的区别是将 value 减 1，赋值给next 变量。</p>
+<p>AtomicInteger中还有getAndIncrement() 和getAndDecrement() 方法，他们的实现原理和上面的两个方法完全相同，区别是返回值不同，前两个方法返回的是改变之后的值，即next。而这两个方法返回的是改变之前的值，即current。还有很多的其他方法，就不列举了。</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

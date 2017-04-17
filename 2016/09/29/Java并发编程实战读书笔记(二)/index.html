@@ -10,6 +10,13 @@
 
     <!--Description-->
     
+        <meta name="description" content="从零到一设计一个线程安全的类（一）设计一个线程安全类的必要条件在设计线程安全类的过程中，需要包含以下三个基本要素：
+
+找出构成对象状态的所有变量
+找出约束状态变量的不变性条件
+建立对象状态的并发访问管理策略
+要确保类的线程安全性，就需要确保它的不变性条件不会再并发访问的情况下被破坏，这就需要对其状态">
+    
 
     <!--Author-->
     
@@ -18,7 +25,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Android Niffler"/>
+        <meta property="og:title" content="Java并发编程实战读书笔记(二)"/>
     
 
     <!--Open Graph Description-->
@@ -29,7 +36,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
     
 
     <!--Page Cover-->
@@ -40,7 +47,7 @@
 
     <!-- Title -->
     
-    <title>Java 并发 - Android Niffler</title>
+    <title>Java并发编程实战读书笔记(二) - Android Niffler</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -134,76 +141,114 @@
 </nav>
 
     <!-- Main Content -->
-    
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
 
-<!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
 <header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>#Java 并发</h1>
+                <div class="post-heading">
+                    <h1>Java并发编程实战读书笔记(二)</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-09-29
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java-并发/">#Java 并发</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
             
-                <div class="post-preview">
-    <a href="/2016/10/01/Java并发编程实战读书笔记(三)/">
-        <h1 class="post-title archive">
-            Java并发编程实战读书笔记(三)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-10-01
-    </p>
-</div>
+
+            <!-- Gallery -->
             
-                <div class="post-preview">
-    <a href="/2016/09/29/Java并发编程实战读书笔记(二)/">
-        <h1 class="post-title archive">
-            Java并发编程实战读书笔记(二)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-09-29
-    </p>
-</div>
-            
-                <div class="post-preview">
-    <a href="/2016/09/28/Java并发编程实战读书笔记(一)/">
-        <h1 class="post-title archive">
-            Java并发编程实战读书笔记(一)
-        </h1>
-    </a>
-    <p class="post-meta archive">
-        <!-- Date and Author -->
-        
-        2016-09-28
-    </p>
-</div>
-            
-            <div class="archive-before-pagination"></div>
-            <ul class="pager">
-    
-    
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="从零到一设计一个线程安全的类"><a href="#从零到一设计一个线程安全的类" class="headerlink" title="从零到一设计一个线程安全的类"></a>从零到一设计一个线程安全的类</h3><h3 id="（一）设计一个线程安全类的必要条件"><a href="#（一）设计一个线程安全类的必要条件" class="headerlink" title="（一）设计一个线程安全类的必要条件"></a>（一）设计一个线程安全类的必要条件</h3><p>在设计线程安全类的过程中，需要包含以下三个基本要素：</p>
+<ul>
+<li>找出构成对象状态的所有变量</li>
+<li>找出约束状态变量的不变性条件</li>
+<li><p>建立对象状态的并发访问管理策略</p>
+<p>要确保类的线程安全性，就需要确保它的不变性条件不会再并发访问的情况下被破坏，这就需要对其状态进行推断，</p>
+</li>
 </ul>
+<h3 id="（二）设计线程车辆追踪系统"><a href="#（二）设计线程车辆追踪系统" class="headerlink" title="（二）设计线程车辆追踪系统"></a>（二）设计线程车辆追踪系统</h3><h5 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h5><p>一个用于调度车辆的车辆追踪器，例如 出租车，警车，货车等，首先使用监视器模式来构建车辆追踪器，然后再尝试放宽某些封装性需求同时又保存线程安全性。每台车都由一个String对象来标示，并且拥有一个相应的位置坐标x，y。在VechicleTracker类中封装了车辆的标识和位置，视图线程会读取车辆的名字和位置，并将它们显示在界面上，执行更新操作的线程通过从GPS设备上获取的数据或者调度员从GUI界面上输入的数据来修改车辆的位置。视图线程与执行更新操作的线程将并发的访问数据模型，因此该模型必须是线程安全的，</p>
+<h3 id="并发技巧清单"><a href="#并发技巧清单" class="headerlink" title="并发技巧清单"></a>并发技巧清单</h3><ul>
+<li>可变状态是至关重要的 所有的并发问题 都可以归结为如何协调对并发状态的访问，可变状态越少，就越容易确保线程安全性</li>
+<li>尽量将域声明为final 类型，除非需要它们是可变的</li>
+<li>不可变对象一定是线程安全的 <ul>
+<li>不可变对象能极大的降低并发编程的复杂性，它们更为简单而且安全，可以任意共享而无需使用加锁或保护性复杂等机制</li>
+</ul>
+</li>
+<li><p>封装有助于管理复杂性</p>
+<ul>
+<li>在编写线程安全的程序时，虽然可以将所有数据都保存在全局变量中，但为什么要这样做？将数据封装在对象中，更易于维持不变形条件：将同步机制封装在对象中，更易于遵循同步策略</li>
+</ul>
+</li>
+<li><p>用锁来保护每个可变变量</p>
+</li>
+<li>当保护同一个不变性条件中的所有变量时，要使用同一个锁</li>
+<li>在执行复合操作期间，要持有锁</li>
+<li>如果从多个线程中访问同一个可变变量时，没有同步机制，那么程序会出现问题</li>
+<li>不要故作聪明的推断出不需要使用同步</li>
+<li>在设计过程中考虑线程安全，或者在文档中明确指出它不是线程安全的</li>
+<li>将同步策略文档化</li>
+</ul>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'androidniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
         </div>
     </div>
-</div>
-
-
+</article>
 
     <!-- Footer -->
     <hr />
