@@ -547,8 +547,6 @@
 <li>一致性 只要x,y内容不变，无论调用多少次结果不变</li>
 <li>其他 x.equals(null) 永远false，x.equals(和x数据类型不同)始终false</li>
 </ul>
-<p>两者的关系</p>
-<p><img src="http://mmbiz.qpic.cn/mmbiz/eZzl4LXykQzNwBLMbG9xO2dKOTibLqDS3X5Udic6TtRBNWs66SicbAHticSe3HBRtWKZb8lXnf1b5IHnxKznoaQ2GQ/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" alt=""></p>
 <p><strong>69. final、finalize 和 finally 的不同之处？</strong></p>
 <p>final 是一个修饰符，可以修饰变量、方法和类。如果 final 修饰变量，意味着该变量的值在初始化后不能被改变。Java 技术允许使用 finalize() 方法在垃圾收集器将对象从内存中清除出去之前做必要的清理工作。这个方法是由垃圾收集器在确定这个对象没有被引用时对这个对象调用的，但是什么时候调用 finalize 没有保证。finally 是一个关键字，与 try 和 catch 一起用于异常的处理。finally 块一定会被执行，无论在 try 块中是否有发生异常。</p>
 <p><strong>70. Java 中的编译期常量是什么？使用它又什么风险？</strong></p>
@@ -831,9 +829,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// The standard idiom for using the wait method</span></div><div class="line"><span class="keyword">synchronized</span> (obj) &#123;</div><div class="line"><span class="keyword">while</span> (condition does not hold)</div><div class="line">obj.wait(); <span class="comment">// (Releases lock, and reacquires on wakeup)</span></div><div class="line">... <span class="comment">// Perform action appropriate to condition</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>参见 Effective Java 第 69 条，获取更多关于为什么应该在循环中来调用 wait 方法的内容。</p>
 <p><strong>9. 什么是多线程环境下的伪共享（false sharing）？</strong></p>
-<p>伪共享是多线程系统（每个处理器有自己的局部缓存）中一个众所周知的性能问题。伪共享发生在不同处理器的上的线程对变量的修改依赖于相同的缓存行，如下图所示：</p>
-<p><img src="http://jbcdn2.b0.upaiyun.com/2015/11/2bccd7f52a70db95aa72524ef3a55164.gif" alt="False Sharing in Multi-threaded application"></p>
-<p>伪共享问题很难被发现，因为线程可能访问完全不同的全局变量，内存中却碰巧在很相近的位置上。如其他诸多的并发问题，避免伪共享的最基本方式是仔细审查代码，根据缓存行来调整你的数据结构。</p>
+<p>伪共享是多线程系统（每个处理器有自己的局部缓存）中一个众所周知的性能问题。伪共享发生在不同处理器的上的线程对变量的修改依赖于相同的缓存行，伪共享问题很难被发现，因为线程可能访问完全不同的全局变量，内存中却碰巧在很相近的位置上。如其他诸多的并发问题，避免伪共享的最基本方式是仔细审查代码，根据缓存行来调整你的数据结构。</p>
 <p><strong>10. 线程的run方法和start方法</strong></p>
 <ul>
 <li><code>run方法</code></li>
