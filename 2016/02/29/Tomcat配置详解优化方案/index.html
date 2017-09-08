@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="1、Tomcat的目录层次结构bin:   存放启动和关闭Tomcat的脚本文件
+conf： 存放Tomcat服务器的各种配置文件
+lib:   存放tomcat服务器支撑的jar包
+logs:  存放Tomcat的日志文件
+temp:  存放Tomcat运行时产生的临时文件
+webapps:web">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Tomcat 配置详解/优化方案"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Java Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Tomcat 配置详解/优化方案 - Java Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Tomcat 配置详解/优化方案</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-02-29
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Tomcat/">#Tomcat</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 id="1、Tomcat的目录层次结构"><a href="#1、Tomcat的目录层次结构" class="headerlink" title="1、Tomcat的目录层次结构"></a>1、Tomcat的目录层次结构</h2><p>bin:   存放启动和关闭Tomcat的脚本文件</p>
+<p>conf： 存放Tomcat服务器的各种配置文件</p>
+<p>lib:   存放tomcat服务器支撑的jar包</p>
+<p>logs:  存放Tomcat的日志文件</p>
+<p>temp:  存放Tomcat运行时产生的临时文件</p>
+<p>webapps:web应用虽在目录，即供外界访问的web资源的存放目录</p>
+<p>work:  Tomcat的工作目录</p>
+<h2 id="2、JavaWeb应用的组成结构"><a href="#2、JavaWeb应用的组成结构" class="headerlink" title="2、JavaWeb应用的组成结构"></a>2、JavaWeb应用的组成结构</h2><p>|—-html、jsp、css、js等文件，根目录下的文件外界可以直接访问</p>
+<p>|—-WEB-INF目录</p>
+<p>|———classes目录(java类)</p>
+<p>|———lib目录(java类运行所需的jar包)</p>
+<p>|———web.xml(web应用的配置文件)</p>
+<p>WEB-INF 这个目录下的文件外界无法直接访问，由web服务器负责调用</p>
+<h2 id="3、JavaWeb应用的发布"><a href="#3、JavaWeb应用的发布" class="headerlink" title="3、JavaWeb应用的发布"></a>3、JavaWeb应用的发布</h2><p>开放式目录方式：</p>
+<p>打包war方式:   使用   Jar -cvf *.war .</p>
+<h2 id="4、Tomcat的Server-xml文件"><a href="#4、Tomcat的Server-xml文件" class="headerlink" title="4、Tomcat的Server.xml文件"></a>4、Tomcat的Server.xml文件</h2><p>Tomcat本身由一系列可配置的组件构成，其中核心组件是Servlet容器组件，它是所有其他Tomcat组件的顶层容器。每个组件都可以在Tomcat安装目录/conf/server.xml文件中进行配置，每个Tomcat组件在server.xml文件中对应一种配置元素。</p>
+<p>server.xml被称为Tomcat的主配置文件或全局配置文件，它完成两个任务：</p>
+<p>（1）提供Tomcat组件的初始配置</p>
+<p>（2）说明Tomcat的结构，含义，使Tomcat通过实例化组件完成启动及构建自身。</p>
+<p>server.xml中描述的重要元素有 Server ,Service ,Connector ,Engine ,Host ,Context .</p>
+<p>结构如下：</p>
+<p>Tomcat-配置及原理</p>
+<p>它们的用处是：</p>
+<p>Server:</p>
+<p>顶层元素,整个配置文件的根元素,表示整个Servlet容器或者Tomcat服务器包含多个Listener,一个GlobalNamingResources和一个Service</p>
+<p>Service:</p>
+<p>一组Connector和一个Engine的集合，这组Connector共用一个Engine来处理所有Connector收到的请求，负责处理所获得到的客户请求</p>
+<p>Listener组:</p>
+<p>监听器，用来管理Tomcat生命周期和全局资源</p>
+<p>GlobalNamingResources:</p>
+<p>配置系统的JNDI（Java Naming and Directory Interface）</p>
+<p>Connector组:</p>
+<p>连接器，代表外部客户之间的接口，将在一个指定的接口上侦听客户请求，并将获得的请求交给进行处理，然后把处理结果返回给客户</p>
+<p>Engine:</p>
+<p>引擎，处理中的所有客户请求，具体来说，获得一个交给的请求后，把这个请求匹配到某个上进行处理，如果没有找到合适的来进行处理，则把这个请求交给一个默认虚拟主机处理。</p>
+<p>Host组:</p>
+<p>虚拟主机，处理一个特定主机的请求，一般来说，每个虚拟主机都可以配置一个到多个Web应用，每个Web应用对应一个,获得的请求最终匹配到某个上，由它进行处理。</p>
+<p>Context组:</p>
+<p>Web应用组，每个Web应用由一个或多个Servlet组成，当获得一个请求后，将映射/conf/web.xml文件中的元素，匹配一个Servlet类进行处理并返回。当一个Web应用被初始化的时候，它将用自己的ClassLoader对象载入web.xml中定义的每个Servlet类。</p>
+<p>我们启动Tomcat，在浏览器中输入：<a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a> 会打开Tomcat的默认页面。实际上，这个页面是在Tomcat安装目录下的：/webapps/root/index.jsp;/webapps是Tomcat服务器用来存放Web应用的目录，每个Web应用都将在这建立各自的子目录，刚装好的Tomcat服务器虚拟主机的默认目录是/webapps/ROOT,所以默认会打开这个目录下的文件。流程如下：</p>
+<p>在/conf目录下的web.xml配置文件中有如下配置：</p>
+<p>index.html</p>
+<p>index.htm</p>
+<p>index.jsp</p>
+<p>这里正是用来配置首页的，Tomcat将按顺序找出标签中的内容作为首页。而在我们的目录下，它只找到了index.jsp，所以会显示它；</p>
+<p>但我们不能将所有的Web程序都放在ROOT里。所以我们需要更改Tomcat的虚拟目录；</p>
+<p>要设置虚拟路径，需要在server.xml文件的中的Web应用添加一个子元素，实际上是配置了一个Web应用的物理存放地址到Tomcat虚拟路径的过程，使得Tomcat能够正确找到Web应用的物理存放路径;</p>
+<p>步骤：</p>
+<p>1）在server.xml的中加上如下代码：</p>
+<p>2)我们把写好的Web应用中的所有文件放到下面的目录中：D:/myapp/test</p>
+<p>3)重启Tomcat，在浏览器中输入：<a href="http://localhost:8080/test" target="_blank" rel="external">http://localhost:8080/test</a> 即可测试</p>
+<p>web.xml</p>
+<p>Tomcat目录下/conf 可为不同的应用程序配置不同的上下文环境；用来对Servlet进行映射；</p>
+<p>一个Web应用的根目录下的/WEB-INF目录中也有一个web.xml，当部署一个Web应用时，总是先加载/conf/web.xml，然后才加载自己Web应用的/WEB-INF/web.xml文件；但处理过程中，总是先使用自己的web.xml配置文件，如果无法处理，才把它交给Tomcat的web.xml文件。</p>
+<p>当用户在浏览器中输入一个JSP文件地址：</p>
+<p><a href="http://localhost:8080/test/index.jsp" target="_blank" rel="external">http://localhost:8080/test/index.jsp</a></p>
+<p>提交的请求最终由一个具体的Servlet来进行处理。我们请求传递的过程如下：</p>
+<p>1）请求首先到达商品为8080的,然后把该请求交给引擎处理；</p>
+<p>2）将这个请求匹配到某个去处理，因为这里默认处理的是localhost，所以请求传递到name属性是localhost的。</p>
+<p>3）根据地址串中的子目录为”test”,获知能够处理该请求的Servlet存放在虚拟目录为”test”的Web应用中，于是通过查找元素，找到path=”test” 的,然后根据中的物理路径”docBase”的属性值查找Web应用的物理地址；</p>
+<p>4）服务器根据对应的Web应用的“WEB_INF/web.xml”配置文件，查找能够处理index.jsp的servlet;</p>
+<p>Tomcat-配置及原理</p>
+<p>如上图所示:</p>
+<p>connector负责接收客户请求,并向客户返回响应结果.在同一个service中,多个connector共享同一个Engine,同一个Engine可以有多个Host,一个Host可以有多个context;一个context对应一个web项目.在运行时,一个Tomcat会给每个context生成一个ServletContext类的实例.</p>
+<p><a href="http://localhost:8080/test/index.jsp" target="_blank" rel="external">http://localhost:8080/test/index.jsp</a></p>
+<p>提交的请求最终由一个具体的Servlet来进行处理。我们请求传递的过程如下</p>
+<p>请求首先到达商品为8080的,然后把该请求交给引擎处理；</p>
+<p>将这个请求匹配到某个去处理，因为这里默认处理的是localhost，所以请求传递到name属性是localhost的。</p>
+<p>根据地址串中的子目录为”test”,获知能够处理该请求的Servlet存放在虚拟目录为”test”的Web应用中，于是通过查找元素，找到path=”test” 的,然后根据中的物理路径”docBase”的属性值查找Web应用的物理地址；</p>
+<p>服务器根据对应的Web应用的“WEB_INF/web.xml”配置文件，查找能够处理index.jsp的servlet;</p>
+<h2 id="5、Tomcat配置优化"><a href="#5、Tomcat配置优化" class="headerlink" title="5、Tomcat配置优化"></a>5、Tomcat配置优化</h2><p>1 ,增加JVM堆内存大小</p>
+<p>通过修改conf 目录下的 catalina.sh文件</p>
+<pre><code>JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8
+-server -Xms1024m -Xmx1024m
+-XX:NewSize=512m -XX:MaxNewSize=512m -XX:PermSize=512m
+-XX:MaxPermSize=512m -XX:+DisableExplicitGC"
+-Xms – 指定初始化时化的栈内存
+-Xmx – 指定最大栈内存
+</code></pre>
+
+<p>在重启你的Tomcat服务器之后，这些配置的更改才会有效。</p>
+<p>2,maxThreads 连接数限制</p>
+<p>maxThreads 是 Tomcat 所能接受最大连接数。一般设置不要超过8000以上，如果你的网站访问量非常大可能使用   运行多个Tomcat实例的方法。</p>
+<p>maxThreads 配置要结合 JVM -Xmx 参数调整，也就是要考虑内存开销。</p>
+<p>maxThreads          客户请求最大线程数</p>
+<p>minSpareThreads        初始化时创建的 socket 线程数</p>
+<p>maxSpareThreads       连接器的最大空闲 socket 线程数</p>
+<p>3,压缩</p>
+<p>压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx/Apache 去做。</p>
+<p>compression             打开压缩功能</p>
+<p>compressionMinSize       启用压缩的输出内容大小，这里面默认为2KB</p>
+<p>compressableMimeType     压缩类型</p>
+<p>4,安全配置</p>
+<p>1，当Tomcat完成安装后你首先要做的事情如下：首次安装完成后立即删除webapps下面的所有代码</p>
+<p>rm -rf /srv/apache-tomcat/webapps/*</p>
+<p>注释或删除 tomcat-users.xml 所有用户权限，看上去如下：</p>
+<p> cat conf/tomcat-users.xml</p>
+<p>2， 隐藏版本信息</p>
+<p>隐藏Tomcat版本信息</p>
+<p>vim $CATALINA_HOME/conf/server.xml</p>
+<p><pre><code>connectionTimeout=”20000”<br>redirectPort=”8443”<br>maxThreads=”8192”<br>minSpareThreads=”64”<br>maxSpareThreads=”128”<br>acceptCount=”128”<br>enableLookups=”false”<br>server=”Neo App Srv 1.0”/&gt;<br></code></pre></p>
+<p>运行  <a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a></p>
+<p>服务器信息已经被改为 Server: Neo App Srv 1.0</p>
+<p>3， 应用程序安全</p>
+<p>关闭war自动部署 unpackWARs=”false” autoDeploy=”false”。防止被植入木马等恶意程序</p>
+<p>关闭 reloadable=”false” 也用于防止被植入木马</p>
+<h2 id="6-Tomcat配置优化后实例"><a href="#6-Tomcat配置优化后实例" class="headerlink" title="6.Tomcat配置优化后实例"></a>6.Tomcat配置优化后实例</h2><pre><code>&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;&gt;
+ &lt;Listener className=&quot;org.apache.catalina.core.AprLifecycleListener&quot;     
+ SSLEngine=&quot;on&quot; /&gt;
+ &lt;Listener className=&quot;org.apache.catalina.core.JasperListener&quot; /&gt;
+&lt;Listener className=&quot;org.apache.catalina.core.JreMemoryLeakPreventionListener&quot; /&gt;
+ &lt;Listener     className=&quot;org.apache.catalina.mbeans.GlobalResourcesLifecycleListener&quot; /&gt;
+  &lt;Listener     className=&quot;org.apache.catalina.core.ThreadLocalLeakPreventionListener&quot; /&gt;
+   &lt;GlobalNamingResources&gt;
+     &lt;Resource name=&quot;UserDatabase&quot; auth=&quot;Container&quot;
+           type=&quot;org.apache.catalina.UserDatabase&quot;
+          description=&quot;User database that can be updated and saved&quot;
+          factory=&quot;org.apache.catalina.users.MemoryUserDatabaseFactory&quot;
+        pathname=&quot;conf/tomcat-users.xml&quot; /&gt;
+  &lt;/GlobalNamingResources&gt;
+
+  &lt;Service name=&quot;Catalina&quot;&gt;
+    &lt;Connector port=&quot;8080&quot;
+                protocol=&quot;HTTP/1.1&quot;
+              URIEncoding=&quot;UTF-8&quot;
+                minSpareThreads=&quot;25&quot;
+               maxSpareThreads=&quot;75&quot;
+               enableLookups=&quot;false&quot;
+               disableUploadTimeout=&quot;true&quot;
+               connectionTimeout=&quot;20000&quot;
+               acceptCount=&quot;300&quot;
+               maxThreads=&quot;300&quot;
+               maxProcessors=&quot;1000&quot;
+               minProcessors=&quot;5&quot;
+               useURIValidationHack=&quot;false&quot;
+               redirectPort=&quot;8443&quot;
+               server=&quot;Homeat App Srv 1.0&quot;
+               /&gt;
+
+      &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;
+       &lt;Realm className=&quot;org.apache.catalina.realm.LockOutRealm&quot;&gt;
+            &lt;Realm className=&quot;org.apache.catalina.realm.UserDatabaseRealm&quot; resourceName=&quot;UserDatabase&quot;/&gt;
+       &lt;/Realm&gt;    
+       &lt;Host name=&quot;localhost&quot;  appBase=&quot;&quot; unpackWARs=&quot;false&quot; autoDeploy=&quot;false&quot;&gt;
+        &lt;Context path=&quot;&quot; docBase=&quot;/var/tomcat/tomcat-7/version/homeat.war&quot;     reloadable=&quot;false&quot;/&gt;
+       &lt;/Host&gt;
+      &lt;/Engine&gt;
+  &lt;/Service&gt; 
+&lt;/Server&gt;
+</code></pre>
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'javaniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
