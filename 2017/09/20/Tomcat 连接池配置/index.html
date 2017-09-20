@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="Tomcat 连接池配置Tomcat ConnectionPool
+
+1. 什么是tomcat ConnectionPoolThe JDBC Connection Pool org.apache.tomcat.jdbc.pool is a replacement or an alternative ">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Tomcat 共享连接池配置"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Java Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Tomcat 共享连接池配置 - Java Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Tomcat 共享连接池配置</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-09-20
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Web系统-Tomcat/">#Web系统 Tomcat</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="Tomcat-连接池配置"><a href="#Tomcat-连接池配置" class="headerlink" title="Tomcat 连接池配置"></a>Tomcat 连接池配置</h1><p><strong>Tomcat</strong> <strong>ConnectionPool</strong></p>
+<hr>
+<p><strong>1. 什么是tomcat ConnectionPool</strong><br>The JDBC Connection Pool org.apache.tomcat.jdbc.pool is a replacement or an alternative to the commons-dbcp connection pool.(用来替代commons-dbcp connection pool)</p>
+<p><strong>2. tomcat ConnectionPool vs commons-dbcp connection pool</strong><br>优势和功能点可以去看看jdbc-pool的文档<br><a href="https://tomcat.apache.org/tomcat-8.0-doc/jdbc-pool.html" target="_blank" rel="external">https://tomcat.apache.org/tomcat-8.0-doc/jdbc-pool.html</a><br>一句话总结就是<br>faster,provide a very simple switch.flexible and pluggable, much simpler implementation.Support for highly concurrent environments and multi core/cpu systems.<br>(相比commons-dbcp connection pool 更快，更加灵活更容易扩展，易于实现，支持高并发和多cpu，并且有tomcat做为其后盾保障， 文档资料齐全，也更加持久稳妥。)</p>
+<p><strong>3. 如何使用Tomcat ConnectionPool</strong><br>tomcat jdbc是从tomcat7开始推出的一个连接池，相比老的dbcp连接池要优秀很多。spring boot将tomcat jdbc作为默认的连接池，只要在pom.xml中引入了spring boot 的jdbc组件，就会自动引入tomcat jdbc连接池。关于引入jdbc和数据库的连接配</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p><strong>4.默认参数</strong></p>
+<p>以下是org.apache.tomcat.jdbc.pool.PoolProperties源码，这是tomcat jdbc连接池的默认初始参数。<br>这个类实现了一个接口PoolConfiguration，查看这个接口的源码，里面有每一个参数的详细说明。<br>官方文档：<br><a href="http://tomcat.apache.org/tomcat-8.5-doc/jdbc-pool.html" target="_blank" rel="external">http://tomcat.apache.org/tomcat-8.5-doc/jdbc-pool.html</a>.</p>
+<pre><code>public class PoolProperties implements PoolConfiguration, Cloneable, Serializable {  
+
+    private static final long serialVersionUID = -8519283440854213745L;  
+    private static final Log log = LogFactory.getLog(PoolProperties.class);  
+
+    public static final int DEFAULT_MAX_ACTIVE = 100;  
+
+    protected static final AtomicInteger poolCounter = new AtomicInteger(0);  
+    private volatile Properties dbProperties = new Properties();  
+    private volatile String url = null;  
+    private volatile String driverClassName = null;  
+    private volatile Boolean defaultAutoCommit = null;  
+    private volatile Boolean defaultReadOnly = null;  
+    private volatile int defaultTransactionIsolation = DataSourceFactory.UNKNOWN_TRANSACTIONISOLATION;  
+    private volatile String defaultCatalog = null;  
+    private volatile String connectionProperties;  
+    private volatile int initialSize = 10;  
+    private volatile int maxActive = DEFAULT_MAX_ACTIVE;  
+    private volatile int maxIdle = maxActive;  
+    private volatile int minIdle = initialSize;  
+    private volatile int maxWait = 30000;  
+    private volatile String validationQuery;  
+    private volatile int validationQueryTimeout = -1;  
+    private volatile String validatorClassName;  
+    private volatile Validator validator;  
+    private volatile boolean testOnBorrow = false;  
+    private volatile boolean testOnReturn = false;  
+    private volatile boolean testWhileIdle = false;  
+    private volatile int timeBetweenEvictionRunsMillis = 5000;  
+    private volatile int numTestsPerEvictionRun;  
+    private volatile int minEvictableIdleTimeMillis = 60000;  
+    private volatile boolean accessToUnderlyingConnectionAllowed = true;  
+    private volatile boolean removeAbandoned = false;  
+    private volatile int removeAbandonedTimeout = 60;  
+    private volatile boolean logAbandoned = false;  
+    private volatile String name = &quot;Tomcat Connection Pool[&quot;+(poolCounter.addAndGet(1))+&quot;-&quot;+System.identityHashCode(PoolProperties.class)+&quot;]&quot;;  
+    private volatile String password;  
+    private volatile String username;  
+    private volatile long validationInterval = 3000;  
+    private volatile boolean jmxEnabled = true;  
+    private volatile String initSQL;  
+    private volatile boolean testOnConnect =false;  
+    private volatile String jdbcInterceptors=null;  
+    private volatile boolean fairQueue = true;  
+    private volatile boolean useEquals = true;  
+    private volatile int abandonWhenPercentageFull = 0;  
+    private volatile long maxAge = 0;  
+    private volatile boolean useLock = false;  
+    private volatile InterceptorDefinition[] interceptors = null;  
+    private volatile int suspectTimeout = 0;  
+    private volatile Object dataSource = null;  
+    private volatile String dataSourceJNDI = null;  
+    private volatile boolean alternateUsernameAllowed = false;  
+    private volatile boolean commitOnReturn = false;  
+    private volatile boolean rollbackOnReturn = false;  
+    private volatile boolean useDisposableConnectionFacade = true;  
+    private volatile boolean logValidationErrors = false;  
+    private volatile boolean propagateInterruptState = false;  
+    private volatile boolean ignoreExceptionOnPreLoad = false;  
+    private volatile boolean useStatementFacade = true;  
+</code></pre><p><strong>5.自定义参数</strong></p>
+<p>如果要修改某个默认参数值，可以在application.properties中配置，如下<br>spring.datasource.tomcat是前缀，maxActive是参数名，105是参数值，其他 参数格式也是一样</p>
+<pre><code>spring.datasource.tomcat.maxActive=105 
+</code></pre><p><strong>6.在JAVA中自定义参数</strong></p>
+<p>在properties中自定义参数有一个问题，如果参数名写错了，是不会有任何错误提示的，会继续使用默认值 。在JAVA中配置可以避免这个问题，以下是设置maxActive参数，set其他参数也是一样@Bean  </p>
+<pre><code>@Bean  
+public DataSource dataSource() {  
+    PoolProperties poolProperties = new PoolProperties();  
+    poolProperties.setMaxActive(105);  
+    return new DataSource(poolProperties);  
+} 
+public DataSource dataSource() {  
+    PoolProperties poolProperties = new PoolProperties();  
+    poolProperties.setMaxActive(105);  
+    return new DataSource(poolProperties);  
+}  
+</code></pre><p><strong>7. tomcat 配置</strong></p>
+<pre><code>&lt; Context path=&quot;/&quot;
+        reloadable=&quot;true&quot;
+        docBase=&quot;/ROOT&quot;
+        debug=&quot;5&quot; &gt;
+        &lt; Resource name=&quot;jdbc/client&quot;
+                auth=&quot;Container&quot;
+                type=&quot;javax.sql.DataSource&quot;
+                maxActive=&quot;100&quot;
+                maxIdle=&quot;30&quot;
+                validationQuery=&quot;SELECT 1&quot;
+                testWhileIdle=&quot;true&quot;
+                timeBetweenEvictionRunsMillis=&quot;300000&quot;
+                numTestsPerEvictionRun=&quot;6&quot;
+                minEvictableIdleTimeMillis=&quot;1800000&quot;
+                maxWait=&quot;10000&quot;
+                username=&quot;roo&quot;
+                password=&quot;123456&quot;
+                driverClassName=&quot;com.mysql.jdbc.Driver&quot;
+                url=&quot;jdbc:mysql://localhost:3306/banma&quot;/&gt;
+&lt; /Context&gt;
+</code></pre><p>1、所有的tomcat项目共用一个连接池配置</p>
+<ul>
+<li>修改conf-&gt;context.xml文件，在Context节点下配置</li>
+<li>修改tomcat的web.xml文件</li>
+</ul>
+<p>2、每个Web项目独立用自己的连接池配置<br> 在Web项目的META-INF目录下创建context.xml文件，内容如下、</p>
+<pre><code>&lt;Context path=&quot;/&quot;&gt; 
+  &lt;Resource name=&quot;jdbc/myDS&quot; 
+  type=&quot;javax.sql.DataSource&quot;   
+  driverClassName=&quot;com.microsoft.sqlserver.jdbc.SQLServerDriver&quot;
+  maxIdle=&quot;2&quot; 
+  maxWait=&quot;5000&quot; 
+  username=&quot;sa&quot; 
+  password=&quot;xx&quot;          
+  url=&quot;jdbc:sqlserver://127.0.0.1xxx:1433&quot;
+  DatabaseName=banma&quot; 
+  maxActive=&quot;4&quot;/&gt; 
+&lt;/Context&gt;
+</code></pre><ul>
+<li>修改Web项目的WEB-INF目录下的web.xml文件</li>
+</ul>
+<p>在web-app节点下配置：</p>
+<pre><code>&lt;resource-ref&gt; 
+  &lt;res-ref-name&gt;jdbc/myDS&lt;/res-ref-name&gt;  
+  &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;  
+  &lt;res-auth&gt;Container&lt;/res-auth&gt; 
+&lt;/resource-ref&gt;
+</code></pre><p>3、需要把数据库驱动jar文件拷贝到tomcat的lib目录下</p>
+<p><strong>9. 参考文献</strong></p>
+<p>[<a href="https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html" target="_blank" rel="external">https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html</a>]<br>(<a href="https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html" target="_blank" rel="external">https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html</a>)</p>
+<p>[<a href="http://wiki.jikexueyuan.com/project/tomcat/tomcat-jdbc-pool.html" target="_blank" rel="external">http://wiki.jikexueyuan.com/project/tomcat/tomcat-jdbc-pool.html</a>]<br>(<a href="http://wiki.jikexueyuan.com/project/tomcat/tomcat-jdbc-pool.html" target="_blank" rel="external">http://wiki.jikexueyuan.com/project/tomcat/tomcat-jdbc-pool.html</a>).</p>
+<p>[<a href="https://examples.javacodegeeks.com/enterprise-java/tomcat/tomcat-connection-pool-configuration-example/" target="_blank" rel="external">https://examples.javacodegeeks.com/enterprise-java/tomcat/tomcat-connection-pool-configuration-example/</a>]<br>(<a href="https://examples.javacodegeeks.com/enterprise-java/tomcat/tomcat-connection-pool-configuration-example/" target="_blank" rel="external">https://examples.javacodegeeks.com/enterprise-java/tomcat/tomcat-connection-pool-configuration-example/</a>)</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'javaniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

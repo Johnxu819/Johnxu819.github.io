@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="Java蛇形输出二叉树面试的时候碰到的一个算法题，当时是用递归+ArrayList的方式实现的，回来的路上仔细想了想。写了一个更优的方案。
+递归实现1234567891011121314151617181920212223242526272829303132333435363738394041424">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Niffler">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Java蛇形输出二叉树"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="Java Niffler"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Java蛇形输出二叉树 - Java Niffler</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Niffler Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about">
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/Johnxu819">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Java蛇形输出二叉树</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-04-15
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Java/">#Java</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h3 id="Java蛇形输出二叉树"><a href="#Java蛇形输出二叉树" class="headerlink" title="Java蛇形输出二叉树"></a>Java蛇形输出二叉树</h3><p>面试的时候碰到的一个算法题，当时是用递归+ArrayList的方式实现的，回来的路上仔细想了想。写了一个更优的方案。</p>
+<h4 id="递归实现"><a href="#递归实现" class="headerlink" title="递归实现"></a>递归实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.Collections;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 蛇形输出二叉树</div><div class="line"> */</div><div class="line">public class Test &#123;</div><div class="line">    private static ArrayList&lt;ArrayList&gt; arrayListSet=new ArrayList&lt;ArrayList&gt;();</div><div class="line">    private static class Node &#123;</div><div class="line">        Node leftChild;</div><div class="line">        Node rightChild;</div><div class="line">        int data;</div><div class="line"></div><div class="line">        Node(int newData) &#123;</div><div class="line">            leftChild = null;</div><div class="line">            rightChild = null;</div><div class="line">            data = newData;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * get tree deep</div><div class="line">     * @param root</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    public static int findDeep(Node root)</div><div class="line">    &#123;</div><div class="line">        int deep = 0;</div><div class="line">        if(root != null)</div><div class="line">        &#123;</div><div class="line">            int lchilddeep = findDeep(root.leftChild);</div><div class="line">            int rchilddeep = findDeep(root.rightChild);</div><div class="line">            deep = lchilddeep &gt; rchilddeep ? lchilddeep + 1 : rchilddeep + 1;</div><div class="line">        &#125;</div><div class="line">        return deep;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     *</div><div class="line">     * @param list</div><div class="line">     * @param deep</div><div class="line">     */</div><div class="line">    private static void reserveToNode(ArrayList&lt;Node&gt; list,int deep)&#123;</div><div class="line">        if(deep&lt;=arrayListSet.size())&#123;</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        ArrayList&lt;Node&gt; arrayList=new ArrayList&lt;Node&gt;();</div><div class="line"></div><div class="line">        for (int i=0;i&lt;list.size();i++)&#123;</div><div class="line">            if(null!=list.get(i).leftChild)&#123;</div><div class="line">                arrayList.add(list.get(i).leftChild);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            if(null!=list.get(i).rightChild)&#123;</div><div class="line">                arrayList.add(list.get(i).rightChild);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        arrayListSet.add(arrayList);</div><div class="line">        reserveToNode(arrayList,deep);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     *  printSnakeList</div><div class="line">     * @param arrayListSet</div><div class="line">     */</div><div class="line">    private static void printSnakeList(ArrayList&lt;ArrayList&gt; arrayListSet)&#123;</div><div class="line">        for (int i=0;i&lt;arrayListSet.size();i++)&#123;</div><div class="line">            ArrayList&lt;Node&gt; arrayList=arrayListSet.get(i);</div><div class="line">            if(i%2==0)&#123;</div><div class="line">                System.out.println(&quot;right start now &quot;);</div><div class="line">                Collections.reverse(arrayList);</div><div class="line">                for (int j=0;j&lt;arrayList.size();j++)&#123;</div><div class="line">                    System.out.println(arrayList.get(j).data+&quot;&quot;);</div><div class="line">                &#125;</div><div class="line">            &#125;else&#123;</div><div class="line">                System.out.println(&quot;left start now &quot;);</div><div class="line">                for (int j=0;j&lt;arrayList.size();j++)&#123;</div><div class="line">                    System.out.println(arrayList.get(j).data+&quot;&quot;);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 初始化</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    public static Node createBinTree()&#123;</div><div class="line">        Node newNode1 = new Node(1);</div><div class="line">        Node newNode2 = new Node(2);</div><div class="line">        Node newNode3 = new Node(3);</div><div class="line">        Node newNode4 = new Node(4);</div><div class="line">        Node newNode5 = new Node(5);</div><div class="line">        Node newNode6 = new Node(6);</div><div class="line">        Node newNode7 = new Node(7);</div><div class="line">        Node newNode8 = new Node(8);</div><div class="line">        Node newNode9 = new Node(9);</div><div class="line">        Node newNode10 = new Node(10);</div><div class="line"></div><div class="line">        newNode1.leftChild=newNode2;</div><div class="line">        newNode1.rightChild=newNode3;</div><div class="line">        newNode1.leftChild.leftChild=newNode4;</div><div class="line">        newNode1.leftChild.rightChild=newNode5;</div><div class="line">        newNode1.rightChild.leftChild=newNode6;</div><div class="line">        newNode1.rightChild.rightChild=newNode7;</div><div class="line">        newNode1.leftChild.leftChild.leftChild=newNode8;</div><div class="line">        newNode1.rightChild.leftChild.leftChild=newNode9;</div><div class="line">        newNode1.rightChild.rightChild.rightChild=newNode10;</div><div class="line"></div><div class="line">        return newNode1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        Node node=createBinTree();</div><div class="line">        int deep=findDeep(node);</div><div class="line">        System.out.println( node.data);</div><div class="line"></div><div class="line">        ArrayList&lt;Node&gt; arrayList=new ArrayList&lt;Node&gt;();</div><div class="line">        arrayList.add(node);</div><div class="line">        reserveToNode(arrayList,deep);</div><div class="line">        printSnakeList(arrayListSet);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="非递归队列实现"><a href="#非递归队列实现" class="headerlink" title="非递归队列实现"></a>非递归队列实现</h3>
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'javaniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/Johnxu819" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2017 Niffler<br></p>
+                <p class="copyright text-muted">版权声明：本站内的所有博文为博主原创文章，未经博主允许可随意转载。</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
