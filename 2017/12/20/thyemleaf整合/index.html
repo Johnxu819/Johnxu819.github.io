@@ -10,6 +10,20 @@
 
     <!--Description-->
     
+        <meta name="description" content="财务系统thyemleaf整合 开发设计 
+1. 配置pom.xml 
+2. 配置controller 
+3. 映射 添加模板引擎 
+4. 添加静态页面
+5. 配置application.properties
+代码相关设计
+
+目录结构
+
+├── src
+│   └── main
+│       ├─">
+    
 
     <!--Author-->
     
@@ -18,7 +32,7 @@
 
     <!--Open Graph Title-->
     
-        <meta property="og:title" content="Java Niffler"/>
+        <meta property="og:title" content="财务系统thyemleaf整合"/>
     
 
     <!--Open Graph Description-->
@@ -29,7 +43,7 @@
 
     <!--Type page-->
     
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
     
 
     <!--Page Cover-->
@@ -40,7 +54,7 @@
 
     <!-- Title -->
     
-    <title>page - Java Niffler</title>
+    <title>财务系统thyemleaf整合 - Java Niffler</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
@@ -135,53 +149,162 @@
 
     <!-- Main Content -->
     <!-- Page Header -->
-<!-- Set your background image for this header in the theme's configuration: index_cover -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
 <header class="intro-header" style="background-image: url('http://homeat.oss-cn-hangzhou.aliyuncs.com/23C3BFC9DBDFC822CF10C9C828E6704F.jpg')">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="site-heading">
-                    <h1>Java Niffler</h1>
-                    <hr class="small">
-                    <span class="subheading">一起聊聊算法和实现原理</span>
+                <div class="post-heading">
+                    <h1>财务系统thyemleaf整合</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2017-12-20
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            
-                <div class="post-preview">
-    <a href="/2016/02/05/Java HashMap工作原理及实现/">
-        <h2 class="post-title">
-            Java HashMap工作原理及实现
-        </h2>
-        
-    </a>
-    <p class="post-meta">
-        <!-- Date and Author -->
-        
-        2016-02-05
-    </p>
-</div>
-<hr>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+
+<a href="/tags/Web系统-thyemleaf/">#Web系统 thyemleaf</a>
+
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
             
 
-            <ul class="pager">
-    
-        <li class="previous"><a href="/">&larr;  下一页</a></li>
-    
-    
-</ul>
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h1 id="财务系统thyemleaf整合"><a href="#财务系统thyemleaf整合" class="headerlink" title="财务系统thyemleaf整合"></a>财务系统thyemleaf整合</h1><p><strong> 开发设计 </strong></p>
+<pre><code>1. 配置pom.xml 
+2. 配置controller 
+3. 映射 添加模板引擎 
+4. 添加静态页面
+5. 配置application.properties
+</code></pre><p><strong>代码相关设计</strong></p>
+<blockquote>
+<p>目录结构</p>
+</blockquote>
+<pre><code>├── src
+│   └── main
+│       ├── java
+│       │   └── com
+│       │       └── banma
+│       │           └── finace
+│       │                   └── FinaceApplication.java
+│       └── webapp
+│           ├── static
+            ├── WEB-INF
+│               └──views
+│                 └──receivable.html
+│ 
+└── pom.xml
+</code></pre><blockquote>
+<p>配置pom.xml</p>
+</blockquote>
+<pre><code>&lt;!--spring boot 使用Thymeleaf模板引擎渲染web依赖--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><blockquote>
+<p>配置controller 映射</p>
+</blockquote>
+<pre><code>@Controller
+@RequestMapping(&quot;/receivable&quot;)
+public class ReceivableWebController {
+    private Logger logger=Logger.getLogger(ReceivableWebController.class.getName());
+
+    @Value(&quot;${runtime.env}&quot;)
+    private String env;
+    /**
+     * 获取财务应收数据
+     * @return String
+     */
+    @RequestMapping(value = &quot;/detail&quot;, method = {RequestMethod.GET})
+    public String getReceivableById(@RequestParam(value = &quot;id&quot;, required = true) Integer id,HttpServletRequest request) {
+        return &quot;receivable&quot;;
+    }
+
+    /**
+     * 获取财务应收数据列表
+     * @return String
+     */
+    @RequestMapping(value = &quot;/list&quot;)
+    public String getReceivableList() {
+        return &quot;receivable-list&quot;;
+    }
+
+}
+</code></pre><blockquote>
+<p>添加静态页面</p>
+</blockquote>
+<pre><code>&lt;!DOCTYPE HTML&gt;
+&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;title&gt;财务应付详情页&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;server is success .runtime is dev&lt;/h2&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><blockquote>
+<p>配置application.properties</p>
+</blockquote>
+<pre><code>spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=/WEB-INF/views/
+</code></pre>
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name: 'javaniffler' };
+  (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';
+      ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+                </div>
+            
         </div>
     </div>
-</div>
-
-
+</article>
 
     <!-- Footer -->
     <hr />
